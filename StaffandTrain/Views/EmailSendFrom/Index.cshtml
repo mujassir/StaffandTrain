@@ -1,0 +1,158 @@
+﻿@model StaffandTrain.Models.EmailTemplate
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<script src="~/ckeditor/ckeditor.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" defer></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" defer></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote-bs4.js" defer></script>
+<script src="~/Custom_JS/SendEmail_Index.js" defer></script>
+
+<style>
+    .note-popover .popover-content .dropdown-menu, .card-header.note-toolbar .dropdown-menu {
+        min-width: 41px !important;
+    }
+
+    .note-editable u, .note-editable ul {
+        text-decoration: underline !important;
+    }
+</style>
+
+<script>
+  @*Added by ST*@
+    //$(function () {
+
+    //    $('.summernote').summernote({
+    //        height: 400,                 // set editor height
+    //        minHeight: 350,             // set minimum height of editor
+    //        maxHeight: null,             // set maximum  height of editor
+    //        onblur: function (e) {
+    //            $('#message').html($('.summernote').code());
+    //        },
+    //        callbacks: {
+    //            onImageUpload: function (image) {
+    //                uploadImage(image[0]);
+    //            }
+    //        }
+
+    //    });
+    //});
+</script>
+
+@using (Html.BeginForm("Sendemail", "EmailSendFrom", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    // hidden field to fetch the batch values in side controller
+    @Html.HiddenFor(m => m.EmailBatchVal, new { id = "HiddenBatchVal" })
+    @Html.HiddenFor(m => m.BatchEmailCount, new { id = "HiddenBatchEmailCount" })
+
+    <label id="IsAuthenticated" style="display:none">@Request.IsAuthenticated</label>
+
+    <div class="container main-ctn">
+        <h1 class="title">Send Email Form</h1>
+        <div class="admin-form">
+            <div class="admin-ctn admin-ctnemail">
+                @if (@ViewBag.message != null && @ViewBag.message != "Error")
+                {
+                    <div id="" class="alert alert-success">@ViewBag.Message</div>
+                }
+                else if (@ViewBag.message != null)
+                {
+                    <div id="" class="alert alert-danger">@ViewBag.Message</div>
+                }
+                <div class="col-sm-6 form-group">
+                    <label>City Circle</label>
+                    @Html.DropDownList("ddlcitycircle", (IEnumerable<SelectListItem>)ViewData["CityCircle"], "Select City Circle", new { name = "ddlcitycircle", @class = "form-control", id = "ddlcitycircle" })
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label>Biztype</label>
+                    @Html.DropDownList("ddlbiztype", new SelectList(string.Empty, "Value", "Text"), "Select Biztype", new { name = "ddlbiztype", @class = "form-control", id = "ddlbiztype" })
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label>Title</label>
+                    @Html.DropDownList("ddltitle", (IEnumerable<SelectListItem>)ViewData["Titlelist"], "Select Title", new { name = "ddltitle", @class = "form-control", id = "ddltitle" })
+                    <div id="" class="validateTips"></div>
+                </div>
+
+
+                <div class="col-sm-6 form-group">
+                    <label>Template Name</label>
+                    @Html.DropDownList("ddltemplate", (IEnumerable<SelectListItem>)ViewData["Templatelist"], "Select template", new { name = "ddltemplate", @class = "form-control", id = "ddltemplate" })
+                    <div id="" class="validateTips"></div>
+                </div>
+                @*Drop cown to select the batch values *@
+                <div class="col-sm-6 form-group" id="BatchSelectingDropdownDiv">
+                    <label>Batch</label>
+                    <select class="form-control" id="SelectBunchValue">
+                        <option value="1">Select batch</option>
+                    </select>
+                    <div id="" class="validateTips"></div>
+                </div>
+
+                <div class="col-sm-12 form-group">
+                    <label>Subject</label>
+                    @Html.TextBox("txtsubject", null, new { @class = "form-control", id = "txtsubject", name = "txtsubject" })
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="col-sm-12 form-group" id="divcount" style="height:auto;">
+                    <label id="divcnt" class="lbl_count">&nbsp;</label>
+                    @*@Html.TextBox("divcnt", null, new { @class = "form-control", id = "divcnt", name = "divcnt" ,@disabled="disabled"})*@
+                </div>
+
+                <div class="col-sm-12 form-group editorsample">
+                    <label>Template Body</label>
+                    @*@Html.TextArea("sampleEditor", new { @class = "ckeditor", @id = "sampleEditor" })*@
+                    @Html.TextAreaFor(x => x.EmailBody, new { @class = "summernote", @id = "message", @maxlength = "2500", name = "sampleEditor" }) @*Added by ST*@
+                    @*@Html.TextArea("sampleEditor", new { @class = "summernote", @id = "message", @maxlength = "2500", name = "sampleEditor" }) @*Added by ST*@
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="clearfix"></div>
+                <h1 class="title">Write Sender's Email Id and Password below:-</h1>
+
+                <div class="col-sm-6 form-group">
+                    <label>Server Name</label>
+                    @Html.TextBox("txtservername", null, new { @class = "form-control", id = "txtservername", name = "txtservername" })
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label>Email Addess</label>
+                    @Html.TextBox("txtemail", null, new { @class = "form-control", id = "txtemail", name = "txtemail" })
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label>Password</label>
+                    @Html.TextBox("txtpassword", null, new { @class = "form-control", id = "txtpassword", name = "txtpassword", @type = "password" })
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label>Port No</label>
+                    @Html.TextBox("txtportno", null, new { @class = "form-control", id = "txtportno", name = "txtportno" })
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label>Enable SSL</label>
+                    <select id="ddlenablessl" name="ddlenablessl" class="form-control">
+                        <option value="1">True</option>
+                        <option value="0">False</option>
+                    </select>
+                    <div id="" class="validateTips"></div>
+                </div>
+                <div class="col-sm-12 form-group">
+                    <label></label>
+                    <div class="divcreate">
+                        <button type="submit" class="btn btn-success" id="btnsave" onclick="funcMyHtml();">Send Email </button>
+                        @Html.Hidden("hiddenImageName", null, new { @class = "form-control", id = "hiddenImageName", name = "hiddenImageName" })
+                    </div>
+                    @*@Html.TextArea("txtTemphidden", null, new { @class = "form-control", id = "txtTemphidden", name = "txtTemphidden" })*@
+                </div>
+            </div>
+        </div>
+    </div>
+}
