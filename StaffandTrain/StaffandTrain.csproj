@@ -1044,6 +1044,7 @@
     <Content Include="Custom_JS\ForgetPassword_Index.js" />
     <Content Include="Custom_JS\ForgetPass_ResetPass_JS.js" />
     <Content Include="Custom_JS\LayoutLoggedIn_JS.js" />
+    <Content Include="Custom_JS\GlobalSearch_Index.js" />
     <Content Include="Custom_JS\Layout_JS.js" />
     <Content Include="Custom_JS\Login_Index_JS.js" />
     <Content Include="Custom_JS\ManageRole_Index.js" />
@@ -1241,13 +1242,13 @@
     <Content Include="Views\ProspectViewList\GetCompanyListNew.cshtml" />
     <Content Include="Views\ProspectViewList\testlist.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\GlobalSearch\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ImagesEmailOrignal\" />
     <Folder Include="ImagesEmail\" />
     <Folder Include="UploadedResumes\" />
-    <Folder Include="Views\GlobalSearch\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
