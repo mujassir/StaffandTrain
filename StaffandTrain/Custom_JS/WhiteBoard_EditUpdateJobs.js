@@ -2,11 +2,10 @@
 
     $("#btnsave").click(function () {
         $(".validateTips").html("");
-        if ($("#txttitle").val().trim() == "") {
-            $('#txttitle').nextAll(".validateTips:first").html("Enter Title");
+        if ($("#txtNotes").val().trim() == "") {
+            $('#txtNotes').nextAll(".validateTips:first").html("Please enter notes");
             return false;
         }
-
 
     });
 });

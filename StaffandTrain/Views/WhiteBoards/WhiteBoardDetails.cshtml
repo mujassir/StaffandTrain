@@ -27,9 +27,9 @@
     <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th>Job Title</th>
+                @*<th>Job Title</th>*@
                 @*<th>Job Description</th>*@
-                <th>Submittals</th>
+                <th>Notes</th>
                 
                 <th>Edit/Delete</th>
             </tr>
@@ -40,7 +40,7 @@
                 foreach (var i in Model)
                 {
                     <tr>
-                        <td width="20%">@i.jobtitle</td>
+                        @*<td width="20%">@i.jobtitle</td>*@
                         @*<td width="30%"><pre> @i.jobdescr</pre></td>*@
                         <td width="60%"><pre> @i.submittals</pre></td>
                         <td width="10%">

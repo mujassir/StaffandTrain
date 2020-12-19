@@ -22,7 +22,7 @@
         <div class="admin-form">
             <div class="admin-ctn">
                 <div class="row">
-                    <div class="col-sm-12 form-group">
+                    @*<div class="col-sm-12 form-group">
                         <label>Job Title</label>
                         @Html.TextBoxFor(x => x.jobtitle, new { id = "txttitle", @placeholder = "Job Title", @class = "form-control" })
                         <div id="" class="validateTips"></div>
@@ -33,11 +33,11 @@
                         @Html.TextAreaFor(x => x.jobdescr, new { id = "txtjobdesc", @placeholder = "Job Description", @class = "form-control form-control1", @rows="8" ,@cols="15" })
                         <div id="" class="validateTips"></div>
 
-                    </div>
+                    </div>*@
                     <div class="col-sm-12 form-group editorsample">
-                        <label>Submittals</label>
+                        <label>Notes</label>
 
-                        @Html.TextAreaFor(x => x.submittals, new { id = "txtsubmittals", @placeholder = "Submittals", @class = "form-control form-control1", @rows = "8", @cols = "15" })
+                        @Html.TextAreaFor(x => x.submittals, new { id = "txtNotes", @placeholder = "Notes", @class = "form-control form-control1", @rows = "8", @cols = "15" })
                         <div id="" class="validateTips"></div>
 
                     </div>
@@ -46,11 +46,11 @@
                         <hr>
                         @if (Model.jobid ==0)
                         {
-                            <button class="btn btn-success" type="submit" id="btnsave">Save Job</button>
+                            <button class="btn btn-success" type="submit" id="btnsave">Save Notes</button>
                         }
                         else
                         {
-                            <button class="btn btn-success" type="submit" id="btnsave">Update Job</button>
+                            <button class="btn btn-success" type="submit" id="btnsave">Update Notes</button>
                         }
                         
 
