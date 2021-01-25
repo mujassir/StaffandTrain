@@ -148,15 +148,16 @@ namespace StaffandTrain.Controllers
 
         private void SaveJobInDatabase(ManageJobs job)
         {
+            var rowNumber = job.RowNumber.HasValue ? job.RowNumber.ToString() : "NULL";
             job.submittals = (job.submittals + "").Replace("'", "''");
             string query;
             if (job.jobiddecypt == 0)
             {
-                query = string.Format("[dbo].[SpcreatenewJob] @jobtitle = NULL, @jobdescr = NULL, @WhiteboardID = {0}, @RowNumber = {1}, @submittals='{2}'", job.WhiteboardID, job.RowNumber, job.submittals);
+                query = string.Format("[dbo].[SpcreatenewJob] @jobtitle = NULL, @jobdescr = NULL, @WhiteboardID = {0}, @RowNumber = {1}, @submittals='{2}'", job.WhiteboardID, rowNumber, job.submittals);
             }
             else
             {
-                query = string.Format("[dbo].[Spupdatejob] @jobtitle = NULL, @jobdescr = NULL, @jobid = {0}, @RowNumber = {1}, @submittals='{2}'", job.jobiddecypt, job.RowNumber, job.submittals);
+                query = string.Format("[dbo].[Spupdatejob] @jobtitle = NULL, @jobdescr = NULL, @jobid = {0}, @RowNumber = {1}, @submittals='{2}'", job.jobiddecypt, rowNumber, job.submittals);
             }
             context.Database.ExecuteSqlCommand(query);
         }

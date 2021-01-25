@@ -28,7 +28,7 @@
         <thead>
             <tr>
                 @*<th>Job Title</th>*@
-                <th>Row Number</th>
+                <th>#</th>
                 <th>Notes</th>
                 
                 <th>Edit/Delete</th>
@@ -41,8 +41,8 @@
                 {
                     <tr>
                         @*<td width="20%">@i.jobtitle</td>*@
-                        <td width="20%"><pre> @i.RowNumber</pre></td>
-                        <td width="70%"><pre> @i.submittals</pre></td>
+                        <td width="5%"><pre> @i.RowNumber</pre></td>
+                        <td width="85%"><pre> @i.submittals</pre></td>
                         <td width="10%">
                             <a class="btn Edit" href="/WhiteBoards/EditUpdateJobs?wbid=@cm.Code_Encrypt(CryptorEngine.Encrypt(ViewBag.wbid.ToString()))&jobid=@cm.Code_Encrypt(CryptorEngine.Encrypt(i.jobid.ToString()))"><i class="fa fa-pencil-square-o"></i></a>
                             <a href="/WhiteBoards/Deletejob?wbid=@cm.Code_Encrypt(CryptorEngine.Encrypt(ViewBag.wbid.ToString()))&jobid=@cm.Code_Encrypt(CryptorEngine.Encrypt(i.jobid.ToString()))" class="btn Delete" onclick='return confirm("Are you sure you wish to delete this Job?");'><i class="fa fa-trash-o"></i></a>
