@@ -23,17 +23,23 @@
             <div class="admin-ctn">
                 <div class="row">
                     @*<div class="col-sm-12 form-group">
-                        <label>Job Title</label>
-                        @Html.TextBoxFor(x => x.jobtitle, new { id = "txttitle", @placeholder = "Job Title", @class = "form-control" })
+            <label>Job Title</label>
+            @Html.TextBoxFor(x => x.jobtitle, new { id = "txttitle", @placeholder = "Job Title", @class = "form-control" })
+            <div id="" class="validateTips"></div>
+        </div>
+        <div class="col-sm-12 form-group editorsample">
+            <label>Job Description</label>
+
+            @Html.TextAreaFor(x => x.jobdescr, new { id = "txtjobdesc", @placeholder = "Job Description", @class = "form-control form-control1", @rows="8" ,@cols="15" })
+            <div id="" class="validateTips"></div>
+
+        </div>*@
+
+                    <div class="col-sm-12 form-group">
+                        <label>Row Number</label>
+                        @Html.TextBoxFor(x => x.RowNumber, new { id = "txtRowNumber", @placeholder = "Row Number", @class = "form-control" })
                         <div id="" class="validateTips"></div>
                     </div>
-                    <div class="col-sm-12 form-group editorsample">
-                        <label>Job Description</label>
-
-                        @Html.TextAreaFor(x => x.jobdescr, new { id = "txtjobdesc", @placeholder = "Job Description", @class = "form-control form-control1", @rows="8" ,@cols="15" })
-                        <div id="" class="validateTips"></div>
-
-                    </div>*@
                     <div class="col-sm-12 form-group editorsample">
                         <label>Notes</label>
 
@@ -44,7 +50,7 @@
                     <div class="clearfix"></div>
                     <div class="col-sm-12 form-group">
                         <hr>
-                        @if (Model.jobid ==0)
+                        @if (Model.jobid == 0)
                         {
                             <button class="btn btn-success" type="submit" id="btnsave">Save Notes</button>
                         }
@@ -52,7 +58,7 @@
                         {
                             <button class="btn btn-success" type="submit" id="btnsave">Update Notes</button>
                         }
-                        
+
 
                         <a href="/WhiteBoards/WhiteBoardDetails?wbid=@cm.Code_Encrypt(CryptorEngine.Encrypt(Model.WhiteboardID.ToString()))" class="btn btn-success" id="lnkcreatedata">Back to list </a>
 
@@ -61,7 +67,7 @@
                         @Html.TextBoxFor(x => x.jobid, new { id = "txtjobid" })
                         @Html.TextBoxFor(x => x.WhiteboardID, new { id = "txtwbid" })
                         @Html.TextBoxFor(x => x.jobiddecypt, new { id = "txtjbid" })
-                        
+
                     </div>
                 </div>
             </div> <!--end admin-form-->

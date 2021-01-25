@@ -13,5 +13,6 @@ namespace StaffandTrain.Models
         public string jobdescr { get; set; }
         public string submittals { get; set; }
         public int? WhiteboardID { get; set; }
+        public int? RowNumber { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using StaffandTrain.Models;
 using StaffandTrain.Common;
+using System.Data.SqlClient;
 
 namespace StaffandTrain.Controllers
 {
@@ -50,16 +51,17 @@ namespace StaffandTrain.Controllers
 
         public ActionResult WhiteBoardDetails(string wbid)
         {
-            var Jobdetails = new List<SpGetJobdetailsbyWbid_Result>();
+            var Jobdetails = new List<ManageJobs>();
             try
             {
                 if (!string.IsNullOrEmpty(wbid))
                 {
                     int wbiddecrypt = Convert.ToInt32(CryptorEngine.Decrypt(cm.Code_Decrypt(Convert.ToString(wbid))));
-                    Jobdetails = context.SpGetJobdetailsbyWbid(wbiddecrypt).ToList();
+                    string query = "[dbo].[SpGetJobdetailsbyWbid] @WhiteboardID = " + wbiddecrypt;
+                    Jobdetails = context.Database.SqlQuery<ManageJobs>(query).ToList();
                     if (Jobdetails.Count() > 0)
                     {
-                        ViewBag.wbname = Jobdetails.FirstOrDefault().WhiteBoardName;
+                        ViewBag.wbname = "";
                     }
                     ViewBag.wbid = wbiddecrypt;
 
@@ -86,16 +88,10 @@ namespace StaffandTrain.Controllers
             if (!string.IsNullOrEmpty(jobid))
             {
                 int jobiddecrypt = Convert.ToInt32(CryptorEngine.Decrypt(cm.Code_Decrypt(Convert.ToString(jobid))));
-                var jobdetails = context.spgetjobdetailbyjobid(jobiddecrypt).FirstOrDefault();
-                if (jobdetails != null)
-                {
-                    objjobsdetails.jobid = jobdetails.jobid;
-                    objjobsdetails.jobiddecypt = jobdetails.jobid;
-                    objjobsdetails.jobtitle = jobdetails.jobtitle;
-                    objjobsdetails.submittals = jobdetails.submittals;
-                    objjobsdetails.jobdescr = jobdetails.jobdescr;
-
-                }
+                //var jobdetails = context.spgetjobdetailbyjobid(jobiddecrypt).FirstOrDefault();
+                string query = "[dbo].[spgetjobdetailbyjobid] @jobid = "+ jobiddecrypt;
+                objjobsdetails = context.Database.SqlQuery<ManageJobs>(query).FirstOrDefault();
+                objjobsdetails.jobiddecypt = objjobsdetails.jobid;
             }
             if (TempData["Message"] != null)
             {
@@ -109,16 +105,13 @@ namespace StaffandTrain.Controllers
         {
             try
             {
+                SaveJobInDatabase(objjobsdetails);
                 if (objjobsdetails.jobiddecypt == 0)
                 {
-                    context.SpcreatenewJob(objjobsdetails.jobtitle, objjobsdetails.jobdescr, objjobsdetails.submittals, objjobsdetails.WhiteboardID);
-                    context.SaveChanges();
                     TempData["Message"] = "Job Created";
                 }
                 else
                 {
-                    context.Spupdatejob(objjobsdetails.jobtitle, objjobsdetails.jobdescr, objjobsdetails.submittals, objjobsdetails.jobiddecypt);
-                    context.SaveChanges();
                     TempData["Message"] = "Job Updated";
                 }
             }
@@ -128,7 +121,7 @@ namespace StaffandTrain.Controllers
                 cm.ErrorExceptionLogingByService(ex.ToString(), "WhiteBoards" + ":" + new StackTrace().GetFrame(0).GetMethod().Name, "WhiteBoardDetails", "NA", "NA", "NA", "WEB");
             }
 
-           return RedirectToAction("WhiteBoardDetails", new { @wbid = @cm.Code_Encrypt(CryptorEngine.Encrypt(objjobsdetails.WhiteboardID.ToString())) });
+            return RedirectToAction("WhiteBoardDetails", new { @wbid = @cm.Code_Encrypt(CryptorEngine.Encrypt(objjobsdetails.WhiteboardID.ToString())) });
             //   return RedirectToAction("Index");
 
         }
@@ -141,7 +134,7 @@ namespace StaffandTrain.Controllers
                 context.spdeletejob(jobiddecrypt);
                 context.SaveChanges();
                 TempData["Message"] = "Record Deleted";
-                return RedirectToAction("WhiteBoardDetails", new {  @wbid = @cm.Code_Encrypt(CryptorEngine.Encrypt(wbiddecrypt.ToString())) });
+                return RedirectToAction("WhiteBoardDetails", new { @wbid = @cm.Code_Encrypt(CryptorEngine.Encrypt(wbiddecrypt.ToString())) });
             }
             catch (Exception ex)
             {
@@ -151,6 +144,21 @@ namespace StaffandTrain.Controllers
 
 
             return View();
+        }
+
+        private void SaveJobInDatabase(ManageJobs job)
+        {
+            job.submittals = (job.submittals + "").Replace("'", "''");
+            string query;
+            if (job.jobiddecypt == 0)
+            {
+                query = string.Format("[dbo].[SpcreatenewJob] @jobtitle = NULL, @jobdescr = NULL, @WhiteboardID = {0}, @RowNumber = {1}, @submittals='{2}'", job.WhiteboardID, job.RowNumber, job.submittals);
+            }
+            else
+            {
+                query = string.Format("[dbo].[Spupdatejob] @jobtitle = NULL, @jobdescr = NULL, @jobid = {0}, @RowNumber = {1}, @submittals='{2}'", job.jobiddecypt, job.RowNumber, job.submittals);
+            }
+            context.Database.ExecuteSqlCommand(query);
         }
     }
 }
