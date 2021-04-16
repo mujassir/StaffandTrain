@@ -11,7 +11,7 @@ using StaffandTrain.Models;
 namespace StaffandTrain.Controllers
 {
     [NoCache]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Recruiter")]
     public class GlobalSearchController : Controller
     {
         // GET: GlobalSearch
