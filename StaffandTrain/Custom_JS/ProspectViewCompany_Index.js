@@ -1,5 +1,14 @@
 ﻿$(document).ready(function () {
-   
+
+    // Maintain page scroll state 
+    $(document).scroll(function () {
+        localStorage['page'] = document.URL;
+        localStorage['scrollTop'] = $(document).scrollTop();
+    });
+    if (localStorage['page'] == document.URL) {
+        $(document).scrollTop(localStorage['scrollTop']);
+    }
+
     getlist();
 
     
