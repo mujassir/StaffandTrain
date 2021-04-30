@@ -5,9 +5,7 @@
         localStorage['page'] = document.URL;
         localStorage['scrollTop'] = $(document).scrollTop();
     });
-    if (localStorage['page'] == document.URL) {
-        $(document).scrollTop(localStorage['scrollTop']);
-    }
+   
 
     getlist();
 
@@ -404,7 +402,16 @@ function getlist() {
             async: false,
             data: { name: name, Notes: Notes, listid: listid, companyid: companyid, emailaddes: emailaddes },
             success: function (msg) {
-
+                var top = localStorage['scrollTop'];
+                if (localStorage['page'] == document.URL) {
+                    $(document).scrollTop(localStorage['scrollTop']);
+                }
+                setTimeout(() => {
+                    if (localStorage['page'] == document.URL) {
+                        $(document).scrollTop(top);
+                    }
+                }, 500);
+                
                 $("#tblcon").html(msg);
                 $(".loading").hide();
             },
