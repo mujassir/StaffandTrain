@@ -1064,7 +1064,7 @@
     <Content Include="Custom_JS\RecruiterProspect_Index.js" />
     <Content Include="Custom_JS\SendEmail_Index.js" />
     <Content Include="Custom_JS\SignUp_Index.js" />
-    <Content Include="Custom_JS\WhiteBoard_EditUpdateJobs.js" />
+    <Content Include="Custom_JS\WhiteBoard_EditUpdateJobs_v1.js" />
     <Content Include="Custom_JS\WhiteBoard_Index.js" />
     <Content Include="DataModel\DataModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

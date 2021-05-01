@@ -101,6 +101,7 @@ namespace StaffandTrain.Controllers
             return View(objjobsdetails);
         }
 
+        [HttpPost, ValidateInput(false)]
         public ActionResult SaveJobs(ManageJobs objjobsdetails)
         {
             try
