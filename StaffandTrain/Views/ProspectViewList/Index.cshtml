@@ -10,6 +10,10 @@
     .fontprospect {
         font-size: 16px;
     }
+
+    a.btn.Delete i.fa-trash-o {
+        color: red;
+    }
 </style>
 <link href="~/Content/loading.css" rel="stylesheet" />
 @*<div class="loading">Loading&#8230;</div>*@
@@ -173,7 +177,37 @@
 </div>
 <!--Modal Popup for Move Functionality [END]-->
 
-<script src="~/Custom_JS/ProspectView_Index_JS.js" defer></script>
+<!--Modal Popup for Delete Confirm [START]-->
+<div class="modal manage-sts-popup" id="DeleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Delete Confirm</h4>
+            </div>
+            <div class="clearfix"></div>
+            <div class="modal-body">
+                <input type="hidden" id="hdnDeleteListId" />
+                <input type="hidden" id="hdnDeleteCompanyId" />
+                <div class="col-sm-12 form-group">
+                    <p>Are you sure you want to delete the selected company? </p>
+                    <label>Company Name: <span id="deleteCompanyName"></span> </label>
+                </div>
+               
+            </div>
+            <div class="clearfix"></div>
+            <div class="modal-footer">
+                <div id="divMoveListData">
+                    <a href="javascript:void(0);" class="btn btn-danger" onclick="return showpopup_Delete_Confirm();">Delete</a>
+                    <a href="javascript:void(0);" class="btn btn-default" onclick="return showpopup_Delete_Cancel();">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Popup for Delete Confirm [END]-->
+
+<script src="~/Custom_JS/ProspectView_Index_JS.js?v=3" defer></script>
 
 
 @*<script type="text/javascript">

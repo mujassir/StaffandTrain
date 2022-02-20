@@ -40,7 +40,6 @@ $(function () {
 
 
             success: function (result) {
-                debugger;
                 var IsRoleAdmin = $('#IsRoleAdmin').text();
                 var table = '<table id="WebGrid" class="table table-striped table-bordered">';
                 //table += '<tr><th>@Resource.FamilyMemberName</th><th>@Resource.SocialId</th><th>@Resource.Relation</th><th>@Resource.Email</th><th>@Resource.Phone</th></tr>';
@@ -195,7 +194,6 @@ function getcompanylist(listid) {
 
 
             success: function (result) {
-                debugger;
                 var IsRoleAdmin = $('#IsRoleAdmin').text();
                 var table = '<table id="WebGrid" class="table table-striped table-bordered">';
                 //table += '<tr><th>@Resource.FamilyMemberName</th><th>@Resource.SocialId</th><th>@Resource.Relation</th><th>@Resource.Email</th><th>@Resource.Phone</th></tr>';
@@ -228,8 +226,11 @@ function getcompanylist(listid) {
                     if (IsRoleAdmin == "True")
                     {
                         var all_parameters = result[i].listid + ',' + result[i].companyid + ',"' + result[i].name + '"';
-                        table += '<td><a id=' + result[i].companyid + ' href=/ProspectViewList/SaveCompany?companyidedit=' + result[i].companyid + ' class="details AnyAction"> <i class="fa fa-pencil-square-o"></i></a>  <a href=/ProspectViewList/DeleteCompany?companyidedit=' + result[i].companyid + '&listid=' + result[i].listid + ' class="btn Delete AnyAction"><i class="fa fa-trash-o"></i></a>';
-                        table += "<a class='btn MoveList' onclick='showpopup_Move(" + all_parameters + ")' href='javascript:void(0)' title='Move company and their contacts with notes to another list'><i class='fa fa-exchange'></i></a></td>";
+                        table += '<td>';
+                        table += '<a id=' + result[i].companyid + ' href=/ProspectViewList/SaveCompany?companyidedit=' + result[i].companyid + ' class="details AnyAction"> <i class="fa fa-pencil-square-o"></i></a>';
+                        table += "<a class='btn MoveList' onclick='showpopup_Move(" + all_parameters + ")' href='javascript:void(0)' title='Move company and their contacts with notes to another list'><i class='fa fa-exchange'></i></a>";
+                        table += "<a class='btn Delete AnyAction' onclick='showpopup_Delete(" + all_parameters + ")' ><i class='fa fa-trash-o'></i></a>";
+                        table += "</td>";
                     }
                     else
                     {
@@ -269,11 +270,27 @@ function hideLoader() {
         $(".loading").hide();
     }, 1000);
 }
+function showpopup_Delete(listid, companyid, companyName) {
+    $("#hdnDeleteListId").val(listid);
+    $("#hdnDeleteCompanyId").val(companyid);
+    $("#deleteCompanyName").html(companyName);
+    $("#DeleteConfirmModal").modal();
+}
+
+function showpopup_Delete_Confirm() {
+    $("#DeleteConfirmModal").modal('hide');
+    var url = "/ProspectViewList/DeleteCompany?companyidedit=" + $("#hdnDeleteCompanyId").val() + '&listid=' + $("#hdnDeleteListId").val();
+    window.location.replace(url);
+}
+function showpopup_Delete_Cancel() {
+    $("#DeleteConfirmModal").modal('hide');
+}
+
+
 
 
 // Functionality for Moving one list's companies and their contacts with notes to another list [START]
 function showpopup_Move(listid, companyid, companyName) {
-    debugger;
     $("#hdnlistid").val("");
     $("#hdncompanyid").val("");
 
@@ -304,7 +321,6 @@ function showpopup_Move(listid, companyid, companyName) {
 }
 
 function moveCompanyToAnotherList() {
-    debugger;
     var moveFrom_ListID = parseInt($("#hdnlistid").val());
     var companyID = parseInt($("#hdncompanyid").val());
     var moveTo_ListID = parseInt($("#ddlOtherList").val());
@@ -345,7 +361,6 @@ function moveCompanyToAnotherList() {
         data: { ListID_from: moveFrom_ListID, CompanyId: companyID, ListID_to: moveTo_ListID },
         async: false,
         success: function (result) {
-            debugger;
             if (result === true) {
                 $("#MoveListDataModal").modal('hide');
                 getcompanylist(moveFrom_ListID);
