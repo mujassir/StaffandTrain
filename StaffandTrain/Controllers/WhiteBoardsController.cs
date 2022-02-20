@@ -20,10 +20,24 @@ namespace StaffandTrain.Controllers
         // GET: WhiteBoards
         public ActionResult Index()
         {
-            var WhiteboardList = new List<SpGetwhiteBoard_Result>();
+            var WhiteboardList = new List<WhiteBoardName>();
             try
             {
-                WhiteboardList = context.SpGetwhiteBoard().ToList();
+                WhiteboardList = context.WhiteBoardNames.Where(p => p.AllowRecruiter != true).ToList();
+            }
+            catch (Exception ex)
+            {
+                cm.ErrorExceptionLogingByService(ex.ToString(), "WhiteBoards" + ":" + new StackTrace().GetFrame(0).GetMethod().Name, "Index", "NA", "NA", "NA", "WEB");
+            }
+            return View(WhiteboardList);
+        }
+
+        public ActionResult RecruiterWB()
+        {
+            var WhiteboardList = new List<WhiteBoardName>();
+            try
+            {
+                WhiteboardList = context.WhiteBoardNames.Where(p => p.AllowRecruiter == true).ToList();
             }
             catch (Exception ex)
             {
@@ -89,7 +103,7 @@ namespace StaffandTrain.Controllers
             {
                 int jobiddecrypt = Convert.ToInt32(CryptorEngine.Decrypt(cm.Code_Decrypt(Convert.ToString(jobid))));
                 //var jobdetails = context.spgetjobdetailbyjobid(jobiddecrypt).FirstOrDefault();
-                string query = "[dbo].[spgetjobdetailbyjobid] @jobid = "+ jobiddecrypt;
+                string query = "[dbo].[spgetjobdetailbyjobid] @jobid = " + jobiddecrypt;
                 objjobsdetails = context.Database.SqlQuery<ManageJobs>(query).FirstOrDefault();
                 objjobsdetails.jobiddecypt = objjobsdetails.jobid;
             }

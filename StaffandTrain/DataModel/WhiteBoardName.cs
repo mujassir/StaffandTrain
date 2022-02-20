@@ -16,5 +16,7 @@ namespace StaffandTrain.DataModel
     {
         public int WBId { get; set; }
         public string WhiteBoardName1 { get; set; }
+        public System.DateTime CreatedDate { get; set; }
+        public Nullable<bool> AllowRecruiter { get; set; }
     }
 }

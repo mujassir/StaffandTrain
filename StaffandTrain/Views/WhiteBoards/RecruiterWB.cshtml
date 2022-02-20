@@ -1,13 +1,13 @@
 ﻿@using StaffandTrain.Common;
 @{
     Common cm = new Common();
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Recruiter WhiteBoard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using (Html.BeginForm("SaveWhiteboard", "WhiteBoards", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
 <div class="container main-ctn">
-    <h1 class="title">White Boards (Admin)</h1>
+    <h1 class="title">White Boards (Recruiter)</h1>
     <div id="divmsg" class="alert alert-success" style="display:none"></div>
     @if (@ViewBag.message != null && @ViewBag.message == "Record Deleted")
     {

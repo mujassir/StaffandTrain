@@ -768,6 +768,8 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.TrainingDocuments
           </Key>
           <Property Name="WBId" Type="int" Nullable="false" />
           <Property Name="WhiteBoardName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="AllowRecruiter" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_Applications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1839,7 +1841,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
     [Newsletters].[ShowLink] AS [ShowLink]
     FROM [dbo].[Newsletters] AS [Newsletters]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="OpenJobs" EntityType="Self.OpenJobs" store:Type="Tables" store:Schema="dbo">
+                    <EntitySet Name="OpenJobs" EntityType="Self.OpenJobs" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [OpenJobs].[jobid] AS [jobid], 
     [OpenJobs].[jobtitle] AS [jobtitle], 
@@ -3529,6 +3531,8 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           </Key>
           <Property Name="WBId" Type="Int32" Nullable="false" />
           <Property Name="WhiteBoardName1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AllowRecruiter" Type="Boolean" />
         </EntityType>
         <EntityType Name="ErrorLog">
           <Key>
@@ -5010,6 +5014,8 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <EntitySetMapping Name="WhiteBoardNames">
             <EntityTypeMapping TypeName="Staffandtrain_NewModel.WhiteBoardName">
               <MappingFragment StoreEntitySet="WhiteBoardNames">
+                <ScalarProperty Name="AllowRecruiter" ColumnName="AllowRecruiter" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="WhiteBoardName1" ColumnName="WhiteBoardName" />
                 <ScalarProperty Name="WBId" ColumnName="WBId" />
               </MappingFragment>

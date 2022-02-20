@@ -24,5 +24,7 @@ namespace StaffandTrain.DataModel
         public Nullable<System.Guid> jobguid { get; set; }
         public string submittals { get; set; }
         public Nullable<int> WhiteboardID { get; set; }
+        public System.DateTime CreatedDate { get; set; }
+        public Nullable<int> RowNumber { get; set; }
     }
 }

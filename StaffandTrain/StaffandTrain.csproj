@@ -1243,6 +1243,7 @@
     <Content Include="Views\ProspectViewList\testlist.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\GlobalSearch\Index.cshtml" />
+    <Content Include="Views\WhiteBoards\RecruiterWB.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
