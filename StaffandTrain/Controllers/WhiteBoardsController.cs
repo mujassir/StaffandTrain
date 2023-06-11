@@ -179,6 +179,12 @@ namespace StaffandTrain.Controllers
                 query = string.Format("[dbo].[Spupdatejob] @jobtitle = NULL, @jobdescr = NULL, @jobid = {0}, @RowNumber = {1}, @submittals='{2}'", job.jobiddecypt, rowNumber, job.submittals);
             }
             context.Database.ExecuteSqlCommand(query);
+            if (job.jobiddecypt == 0) 
+            {
+                var objjobsdetails = context.Database.SqlQuery<ManageJobs>("[dbo].[spgetlastjobdetail]").FirstOrDefault();
+                job.jobiddecypt = objjobsdetails.jobid;
+            }
+                
         }
     }
 }
