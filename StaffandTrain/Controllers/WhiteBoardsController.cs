@@ -136,7 +136,11 @@ namespace StaffandTrain.Controllers
                 cm.ErrorExceptionLogingByService(ex.ToString(), "WhiteBoards" + ":" + new StackTrace().GetFrame(0).GetMethod().Name, "WhiteBoardDetails", "NA", "NA", "NA", "WEB");
             }
 
-            return RedirectToAction("WhiteBoardDetails", new { @wbid = @cm.Code_Encrypt(CryptorEngine.Encrypt(objjobsdetails.WhiteboardID.ToString())) });
+            return RedirectToAction("EditUpdateJobs", new 
+            {
+                @wbid = @cm.Code_Encrypt(CryptorEngine.Encrypt(objjobsdetails.WhiteboardID.ToString())),
+                @jobid = @cm.Code_Encrypt(CryptorEngine.Encrypt(objjobsdetails.jobiddecypt.ToString()))
+            });
             //   return RedirectToAction("Index");
 
         }
