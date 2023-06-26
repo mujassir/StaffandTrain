@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Staffandtrain_NewModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Staffandtrain_NewModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="aspnet_Applications">
           <Key>
             <PropertyRef Name="ApplicationId" />
@@ -326,8 +326,6 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.Newsletters' does
           <Property Name="NewsletterComments" Type="varchar" MaxLength="100" />
           <Property Name="ShowLink" Type="char" MaxLength="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.OpenJobs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="OpenJobs">
           <Key>
             <PropertyRef Name="jobid" />
@@ -342,6 +340,8 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.OpenJobs' does no
           <Property Name="jobguid" Type="uniqueidentifier" />
           <Property Name="submittals" Type="varchar(max)" />
           <Property Name="WhiteboardID" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="RowNumber" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.OpenJobs10' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -770,6 +770,42 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.TrainingDocuments
           <Property Name="WhiteBoardName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="AllowRecruiter" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.Workers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Workers">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Email" />
+            <PropertyRef Name="Password" />
+            <PropertyRef Name="CheckIn" />
+            <PropertyRef Name="CreateDate" />
+            <PropertyRef Name="ModifiedDate" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="CheckIn" Type="time" Precision="7" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.WorkersLog' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="WorkersLog">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="WorkerId" />
+            <PropertyRef Name="Description" />
+            <PropertyRef Name="LogType" />
+            <PropertyRef Name="CreateDate" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkerId" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="LogType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_Applications' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1463,6 +1499,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Parameter Name="jobdescr" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="submittals" Type="varchar(max)" Mode="In" />
           <Parameter Name="WhiteboardID" Type="int" Mode="In" />
+          <Parameter Name="RowNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="SPdeleteContact" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ContactId" Type="int" Mode="In" />
@@ -1482,6 +1519,9 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
         <Function Name="SPDeleteUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Userid" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="SPDeleteWorker" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
         </Function>
         <Function Name="SPErrorLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Error" Type="varchar(max)" Mode="In" />
@@ -1659,6 +1699,22 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Parameter Name="Subject" Type="varchar" Mode="In" />
           <Parameter Name="EmailBody" Type="varchar(max)" Mode="In" />
         </Function>
+        <Function Name="SPInsertOrUpdateWorker" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="Password" Type="nvarchar" Mode="In" />
+          <Parameter Name="CheckIn" Type="time" Mode="In" />
+          <Parameter Name="CreateDate" Type="datetime" Mode="In" />
+          <Parameter Name="ModifiedDate" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="SPInsertOrUpdateWorkerLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="WorkerId" Type="int" Mode="In" />
+          <Parameter Name="Description" Type="nvarchar" Mode="In" />
+          <Parameter Name="LogType" Type="nvarchar" Mode="In" />
+          <Parameter Name="CreateDate" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="SPInsertProspectlist" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="listname" Type="nvarchar" Mode="In" />
           <Parameter Name="restricted" Type="tinyint" Mode="In" />
@@ -1733,6 +1789,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Parameter Name="jobdescr" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="submittals" Type="varchar(max)" Mode="In" />
           <Parameter Name="jobid" Type="int" Mode="In" />
+          <Parameter Name="RowNumber" Type="int" Mode="In" />
         </Function>
         <Function Name="SPUpdateProspectList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="listname" Type="nvarchar" Mode="In" />
@@ -1777,6 +1834,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <EntitySet Name="Companies_ListDeleted" EntityType="Self.Companies_ListDeleted" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contacts" EntityType="Self.Contacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmailTemplate" EntityType="Self.EmailTemplate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OpenJobs" EntityType="Self.OpenJobs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Prospecting_Lists" EntityType="Self.Prospecting_Lists" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Subscribers" EntityType="Self.Subscribers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TitleStandard" EntityType="Self.TitleStandard" Schema="dbo" store:Type="Tables" />
@@ -1840,20 +1898,6 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
     [Newsletters].[NewsletterComments] AS [NewsletterComments], 
     [Newsletters].[ShowLink] AS [ShowLink]
     FROM [dbo].[Newsletters] AS [Newsletters]</DefiningQuery>
-          </EntitySet>
-                    <EntitySet Name="OpenJobs" EntityType="Self.OpenJobs" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [OpenJobs].[jobid] AS [jobid], 
-    [OpenJobs].[jobtitle] AS [jobtitle], 
-    [OpenJobs].[jobdescr] AS [jobdescr], 
-    [OpenJobs].[jobcity] AS [jobcity], 
-    [OpenJobs].[datestamp] AS [datestamp], 
-    [OpenJobs].[postedby] AS [postedby], 
-    [OpenJobs].[status] AS [status], 
-    [OpenJobs].[jobguid] AS [jobguid], 
-    [OpenJobs].[submittals] AS [submittals], 
-    [OpenJobs].[WhiteboardID] AS [WhiteboardID]
-    FROM [dbo].[OpenJobs] AS [OpenJobs]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="OpenJobs10" EntityType="Self.OpenJobs10" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -2119,6 +2163,26 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
     [TrainingDocuments].[ShowLink] AS [ShowLink], 
     [TrainingDocuments].[TrainingDocumentOrder] AS [TrainingDocumentOrder]
     FROM [dbo].[TrainingDocuments] AS [TrainingDocuments]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Workers" EntityType="Self.Workers" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Workers].[Id] AS [Id], 
+    [Workers].[Name] AS [Name], 
+    [Workers].[Email] AS [Email], 
+    [Workers].[Password] AS [Password], 
+    [Workers].[CheckIn] AS [CheckIn], 
+    [Workers].[CreateDate] AS [CreateDate], 
+    [Workers].[ModifiedDate] AS [ModifiedDate]
+    FROM [dbo].[Workers] AS [Workers]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="WorkersLog" EntityType="Self.WorkersLog" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [WorkersLog].[Id] AS [Id], 
+    [WorkersLog].[WorkerId] AS [WorkerId], 
+    [WorkersLog].[Description] AS [Description], 
+    [WorkersLog].[LogType] AS [LogType], 
+    [WorkersLog].[CreateDate] AS [CreateDate]
+    FROM [dbo].[WorkersLog] AS [WorkersLog]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vw_aspnet_Applications" EntityType="Self.vw_aspnet_Applications" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -2772,6 +2836,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
             <Parameter Name="jobdescr" Mode="In" Type="String" />
             <Parameter Name="submittals" Mode="In" Type="String" />
             <Parameter Name="WhiteboardID" Mode="In" Type="Int32" />
+            <Parameter Name="RowNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPdeleteContact">
           <Parameter Name="ContactId" Mode="In" Type="Int32" />
@@ -3016,6 +3081,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
             <Parameter Name="jobdescr" Mode="In" Type="String" />
             <Parameter Name="submittals" Mode="In" Type="String" />
             <Parameter Name="jobid" Mode="In" Type="Int32" />
+            <Parameter Name="RowNumber" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SPUpdateProspectList">
             <Parameter Name="listname" Mode="In" Type="String" />
@@ -3175,6 +3241,27 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
             <Parameter Name="titleStandard" Mode="In" Type="String" />
             <Parameter Name="StartIndex" Mode="In" Type="Int32" />
             <Parameter Name="EndIndex" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Workers" EntityType="Staffandtrain_NewModel.Worker" />
+          <FunctionImport Name="SPInsertOrUpdateWorker">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="CheckIn" Mode="In" Type="Time" />
+            <Parameter Name="CreateDate" Mode="In" Type="DateTime" />
+            <Parameter Name="ModifiedDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="SPDeleteWorker">
+          <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="WorkersLogs" EntityType="Staffandtrain_NewModel.WorkersLog" />
+          <FunctionImport Name="SPInsertOrUpdateWorkerLog">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="WorkerId" Mode="In" Type="Int32" />
+            <Parameter Name="Description" Mode="In" Type="String" />
+            <Parameter Name="LogType" Mode="In" Type="String" />
+            <Parameter Name="CreateDate" Mode="In" Type="DateTime" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="aspnet_Applications">
@@ -3612,6 +3699,8 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Property Name="jobguid" Type="Guid" />
           <Property Name="submittals" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="WhiteboardID" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowNumber" Type="Int32" />
         </EntityType>
         <EntityType Name="OpenJobs10">
           <Key>
@@ -4654,6 +4743,38 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Property Type="String" Name="Userid" Nullable="true" MaxLength="150" />
           <Property Type="String" Name="ResumeFilePath" Nullable="true" MaxLength="250" />
         </ComplexType>
+        <EntityType Name="Worker">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Email" />
+            <PropertyRef Name="Password" />
+            <PropertyRef Name="CheckIn" />
+            <PropertyRef Name="CreateDate" />
+            <PropertyRef Name="ModifiedDate" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CheckIn" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="WorkersLog">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="WorkerId" />
+            <PropertyRef Name="Description" />
+            <PropertyRef Name="LogType" />
+            <PropertyRef Name="CreateDate" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkerId" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LogType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5091,6 +5212,8 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <EntitySetMapping Name="OpenJobs">
             <EntityTypeMapping TypeName="Staffandtrain_NewModel.OpenJob">
               <MappingFragment StoreEntitySet="OpenJobs">
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="WhiteboardID" ColumnName="WhiteboardID" />
                 <ScalarProperty Name="submittals" ColumnName="submittals" />
                 <ScalarProperty Name="jobguid" ColumnName="jobguid" />
@@ -6266,6 +6389,33 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Workers">
+            <EntityTypeMapping TypeName="Staffandtrain_NewModel.Worker">
+              <MappingFragment StoreEntitySet="Workers">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CheckIn" ColumnName="CheckIn" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPInsertOrUpdateWorker" FunctionName="Staffandtrain_NewModel.Store.SPInsertOrUpdateWorker" />
+          <FunctionImportMapping FunctionImportName="SPDeleteWorker" FunctionName="Staffandtrain_NewModel.Store.SPDeleteWorker" />
+          <EntitySetMapping Name="WorkersLogs">
+            <EntityTypeMapping TypeName="Staffandtrain_NewModel.WorkersLog">
+              <MappingFragment StoreEntitySet="WorkersLog">
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LogType" ColumnName="LogType" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="WorkerId" ColumnName="WorkerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPInsertOrUpdateWorkerLog" FunctionName="Staffandtrain_NewModel.Store.SPInsertOrUpdateWorkerLog" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

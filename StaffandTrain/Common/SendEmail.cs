@@ -12,6 +12,8 @@ using System.Collections;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
+using StaffandTrain.DataModel;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 /// <summary>
 /// Summary description for SendEmail
@@ -19,7 +21,9 @@ using System.Net.Security;
 namespace StaffandTrain.Common
 {
     public class SendEmail
-    { 
+    {
+        SATConn context = new SATConn();
+
         private readonly SmtpClient _smtpClient;
         //---==== SendEmail Constructor ====----
         public SendEmail(string sectionName = "default")
@@ -89,7 +93,87 @@ namespace StaffandTrain.Common
             return emailResult;
         }
 
+        public static void SendSMTPEmail(string recipientEmail, string subject, string body)
+        {
+            // Email parameters
+            string senderEmail = "goodmorning@nearshore-usa.com";
+            string senderPassword = "Ideas321!";
 
+            // SMTP server details
+            string smtpHost = "mail.nearshore-usa.com";
+            int smtpPort = 2525; // Port number for the SMTP server
+            bool enableSsl = false; // Set it to true if your SMTP server requires SSL/TLS
+
+            try
+            {
+                using (MailMessage mailMessage = new MailMessage())
+                {
+                    mailMessage.From = new MailAddress(senderEmail);
+                    mailMessage.To.Add(recipientEmail);
+                    mailMessage.Subject = subject;
+                    mailMessage.Body = body;
+
+                    using (SmtpClient smtpClient = new SmtpClient(smtpHost, smtpPort))
+                    {
+                        smtpClient.EnableSsl = enableSsl;
+                        smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+                        smtpClient.Send(mailMessage);
+                    }
+
+                    Console.WriteLine("Email sent successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error sending email: " + ex.Message);
+            }
+        }
+    
+        public void ScheduleWorkerEmail()
+        {
+            // Email those workers which 15 minutes are remaining to login
+            DateTime currentTime = DateTime.Now;
+            DateTime endTime = currentTime.AddMinutes(15); // Update 15 value as per required minutes
+
+            var workers = context.Workers.Where(e => e.CheckIn > currentTime.TimeOfDay && e.CheckIn <= endTime.TimeOfDay).ToList();
+            if (workers.Count() > 0)
+            {
+                foreach (var worker in workers)
+                {
+                    var subject = "Quick Reminder: 15 Minutes Left to Log In!"; // Update 15 value as per required minutes
+                    var body = "Please log in at your designated time.";
+                    SendSMTPEmail(worker.Email, subject, body);
+                }
+            }
+
+            
+
+            // Email those workers which are not login
+            DateTime currentTime1= currentTime.AddMinutes(-15);
+            DateTime endTime1 = DateTime.Now;
+
+            var workers1 = context.Workers.Where(e => e.CheckIn > currentTime1.TimeOfDay && e.CheckIn <= endTime1.TimeOfDay).ToList();
+            if (workers1.Count() > 0)
+            {
+                var workersName = "";
+                foreach (var worker in workers1)
+                {
+                    if (workersName != "") workersName += ", ";
+                    workersName += worker.Name;
+
+                    var subject = "Quick Reminder: Your Log In time expired!";
+                    var body = "Your Log In time expired!";
+                    SendSMTPEmail(worker.Email, subject, body);
+                }
+
+                if (workersName != "")
+                {
+                    var subject = "Reminder: Not Logged Workers!";
+                    var body = workersName + " Workers are not logged In on time.";
+                    SendSMTPEmail("Admin@email.com", subject, body);
+                }
+            }
+        }
     }
 
 }
