@@ -91,6 +91,8 @@ namespace StaffandTrain.DataModel
         public virtual DbSet<vw_aspnet_WebPartState_Paths> vw_aspnet_WebPartState_Paths { get; set; }
         public virtual DbSet<vw_aspnet_WebPartState_Shared> vw_aspnet_WebPartState_Shared { get; set; }
         public virtual DbSet<vw_aspnet_WebPartState_User> vw_aspnet_WebPartState_User { get; set; }
+        public virtual DbSet<Worker> Workers { get; set; }
+        public virtual DbSet<WorkersLog> WorkersLogs { get; set; }
     
         public virtual ObjectResult<string> aspnet_AnyDataInTables(Nullable<int> tablesToCheck)
         {
@@ -1417,7 +1419,7 @@ namespace StaffandTrain.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Spcontexportclient_Result>("Spcontexportclient", listidParameter, bizTypeParameter);
         }
     
-        public virtual int SpcreatenewJob(string jobtitle, string jobdescr, string submittals, Nullable<int> whiteboardID)
+        public virtual int SpcreatenewJob(string jobtitle, string jobdescr, string submittals, Nullable<int> whiteboardID, Nullable<int> rowNumber)
         {
             var jobtitleParameter = jobtitle != null ?
                 new ObjectParameter("jobtitle", jobtitle) :
@@ -1435,7 +1437,11 @@ namespace StaffandTrain.DataModel
                 new ObjectParameter("WhiteboardID", whiteboardID) :
                 new ObjectParameter("WhiteboardID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SpcreatenewJob", jobtitleParameter, jobdescrParameter, submittalsParameter, whiteboardIDParameter);
+            var rowNumberParameter = rowNumber.HasValue ?
+                new ObjectParameter("RowNumber", rowNumber) :
+                new ObjectParameter("RowNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SpcreatenewJob", jobtitleParameter, jobdescrParameter, submittalsParameter, whiteboardIDParameter, rowNumberParameter);
         }
     
         public virtual int SPdeleteContact(Nullable<int> contactId)
@@ -2265,7 +2271,7 @@ namespace StaffandTrain.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SpUpdateEmailTemplate", templateNameParameter, subjectParameter, emailBodyParameter, templateIdParameter);
         }
     
-        public virtual int Spupdatejob(string jobtitle, string jobdescr, string submittals, Nullable<int> jobid)
+        public virtual int Spupdatejob(string jobtitle, string jobdescr, string submittals, Nullable<int> jobid, Nullable<int> rowNumber)
         {
             var jobtitleParameter = jobtitle != null ?
                 new ObjectParameter("jobtitle", jobtitle) :
@@ -2283,7 +2289,11 @@ namespace StaffandTrain.DataModel
                 new ObjectParameter("jobid", jobid) :
                 new ObjectParameter("jobid", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Spupdatejob", jobtitleParameter, jobdescrParameter, submittalsParameter, jobidParameter);
+            var rowNumberParameter = rowNumber.HasValue ?
+                new ObjectParameter("RowNumber", rowNumber) :
+                new ObjectParameter("RowNumber", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Spupdatejob", jobtitleParameter, jobdescrParameter, submittalsParameter, jobidParameter, rowNumberParameter);
         }
     
         public virtual int SPUpdateProspectList(string listname, Nullable<byte> restricted, Nullable<int> listid)
@@ -2714,6 +2724,73 @@ namespace StaffandTrain.DataModel
                 new ObjectParameter("EndIndex", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPGetDataForSendingEmailWithoutBizType_Result>("SPGetDataForSendingEmailWithoutBizType", prospectListIdParameter, titleStandardParameter, startIndexParameter, endIndexParameter);
+        }
+    
+        public virtual int SPInsertOrUpdateWorker(Nullable<int> id, string name, string email, string password, Nullable<System.TimeSpan> checkIn, Nullable<System.DateTime> createDate, Nullable<System.DateTime> modifiedDate)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("Password", password) :
+                new ObjectParameter("Password", typeof(string));
+    
+            var checkInParameter = checkIn.HasValue ?
+                new ObjectParameter("CheckIn", checkIn) :
+                new ObjectParameter("CheckIn", typeof(System.TimeSpan));
+    
+            var createDateParameter = createDate.HasValue ?
+                new ObjectParameter("CreateDate", createDate) :
+                new ObjectParameter("CreateDate", typeof(System.DateTime));
+    
+            var modifiedDateParameter = modifiedDate.HasValue ?
+                new ObjectParameter("ModifiedDate", modifiedDate) :
+                new ObjectParameter("ModifiedDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SPInsertOrUpdateWorker", idParameter, nameParameter, emailParameter, passwordParameter, checkInParameter, createDateParameter, modifiedDateParameter);
+        }
+    
+        public virtual int SPDeleteWorker(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SPDeleteWorker", idParameter);
+        }
+    
+        public virtual int SPInsertOrUpdateWorkerLog(Nullable<int> id, Nullable<int> workerId, string description, string logType, Nullable<System.DateTime> createDate)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            var workerIdParameter = workerId.HasValue ?
+                new ObjectParameter("WorkerId", workerId) :
+                new ObjectParameter("WorkerId", typeof(int));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("Description", description) :
+                new ObjectParameter("Description", typeof(string));
+    
+            var logTypeParameter = logType != null ?
+                new ObjectParameter("LogType", logType) :
+                new ObjectParameter("LogType", typeof(string));
+    
+            var createDateParameter = createDate.HasValue ?
+                new ObjectParameter("CreateDate", createDate) :
+                new ObjectParameter("CreateDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SPInsertOrUpdateWorkerLog", idParameter, workerIdParameter, descriptionParameter, logTypeParameter, createDateParameter);
         }
     }
 }

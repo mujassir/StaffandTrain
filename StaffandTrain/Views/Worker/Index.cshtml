@@ -44,10 +44,11 @@ else if (@ViewBag.message != null)
                 <tr>
                     <td>@i.Name</td>
                     <td>@i.Email</td>
+                    <td>@i.CheckIn</td>
 
                     <td>
-                        <a class="btn Edit" href="/Worker/SaveWorker?id=@i.Id"><i class="fa fa-pencil-square-o"></i></a>
-                        <a href="/Worker/Deleteworker?id=@i.Id" class="btn Delete" onclick='return confirm("Are you sure you wish to delete this Worker?");'><i class="fa fa-trash-o"></i></a>
+                        <a class="btn Edit" href="/Worker/SaveWorker/@i.Id"><i class="fa fa-pencil-square-o"></i></a>
+                        <a href="/Worker/Deleteworker/@i.Id" class="btn Delete" onclick='return confirm("Are you sure you wish to delete this Worker?");'><i class="fa fa-trash-o"></i></a>
                     </td>
                 </tr>
             }

@@ -80,6 +80,8 @@
         <AssociationConnector Association="Staffandtrain_NewModel.FK__aspnet_Pr__UserI__07C12930" />
         <AssociationConnector Association="Staffandtrain_NewModel.FK_UserProspectingList_UserProspectingList" />
         <AssociationConnector Association="Staffandtrain_NewModel.aspnet_UsersInRoles" />
+        <EntityTypeShape EntityType="Staffandtrain_NewModel.Worker" Width="1.5" PointX="0.75" PointY="23.25" />
+        <EntityTypeShape EntityType="Staffandtrain_NewModel.WorkersLog" Width="1.5" PointX="14.375" PointY="23.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

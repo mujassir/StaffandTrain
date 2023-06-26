@@ -1,10 +1,6 @@
 ﻿$(document).ready(function () {
     $("#btnsave").click(function () {
         $(".validateTips").html("");
-        if ($("#txtname").val().trim() == "") {
-            $('#txtname').nextAll(".validateTips:first").html("Enter UserName");
-            return false;
-        }
         if ($("#txtemail").val().trim() == "") {
             $('#txtemail').nextAll(".validateTips:first").html("Enter Email");
             return false;
@@ -16,28 +12,17 @@
             }
 
         }
-        
-        if (Number($("#txtid").val()) === 0) {
-            if ($("#txtpassword").val().trim() == "") {
-                $('#txtpassword').nextAll(".validateTips:first").html("Enter Password");
-                return false;
-            }
+
+        if ($("#txtpassword").val().trim() == "") {
+            $('#txtpassword').nextAll(".validateTips:first").html("Enter Password");
+            return false;
+        }
+
+        if ($("#txtpassword").val() != "") {
             if ($("#txtpassword").val().length < 5) {
                 $('#txtpassword').nextAll(".validateTips:first").html("Password length should contain minimum 5 characters");
                 return false;
             }
-        }
-        else {
-            if ($("#txtpassword").val() != "") {
-                if ($("#txtpassword").val().length < 5) {
-                    $('#txtpassword').nextAll(".validateTips:first").html("Password length should contain minimum 5 characters");
-                    return false;
-                }
-            }
-        }
-        if ($("#txtcheckin").val().trim() == "") {
-            $('#txtcheckin').nextAll(".validateTips:first").html("Enter Check In Time");
-            return false;
         }
 
     });

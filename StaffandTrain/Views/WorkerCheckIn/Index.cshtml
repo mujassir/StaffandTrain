@@ -1,6 +1,6 @@
 ﻿@model StaffandTrain.Models.WorkerCheckInModel
 @{
-    ViewBag.Title = "SaveWorker";
+    ViewBag.Title = "CheckInWorker";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,11 +11,16 @@
 <div class="container main-ctn">
     <h1 class="title">Check In Worker</h1>
 
-    @if (@ViewBag.Message != null)
+    @if (@ViewBag.Message != null && @ViewBag.Message == "Checked In Successfully!")
+    {
+        <div id="" class="alert alert-success">@ViewBag.Message</div>
+    }
+    else if (@ViewBag.Message != null)
     {
         <div id="" class="alert alert-danger">@ViewBag.Message</div>
     }
-    @using (Html.BeginForm("CheckInWorker", "WorkerCheckInController", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+
+    @using (Html.BeginForm("CheckInWorker", "WorkerCheckIn", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         <div class="admin-form">
             <div class="admin-ctn">
@@ -49,6 +54,7 @@
     }
 </div>
 <script src="~/chosen.jquery.min.js"></script>
+<script src="~/Custom_JS/WorkerCheckIn.js" defer></script>
 <script src="~/docsupport/prism.js" charset="utf-8"></script>
 <script src="~/docsupport/init.js" charset="utf-8"></script>
 

@@ -57,20 +57,25 @@
         <div class="container">
             <div class="top-link">
                 <ul class="navupper">
-                    @if (Request.IsAuthenticated) {
+                    @if (Request.IsAuthenticated)
+                    {
                         <li><a href="javascript:void(0)">@User.Identity.Name </a></li>
                     }
                     <li><a href="javascript:void(0)"><span class="fa fa-home"></span>Home</a></li>
                     <li><a href="javascript:void(0)"><span class="fa fa-user-o"></span>Client</a></li>
                     <li><a href="javascript:void(0)"><span class="fa fa-user"></span>Recruiter</a></li>
-                    @if (User.IsInRole("Admin")) {
+                    <li><a href="/WorkerCheckIn"><span class="fa fa-user"></span> Check In Worker</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
                         <li><a href="/AdminHome"><span class="fa fa-key"></span>Admin</a></li>
                     }
 
-                    @if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated) {
+                    @if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
                         <li><a href="/Login/LogOut"><span class="fa fa-user"></span> LogOut</a></li>
                     }
-                    else {
+                    else
+                    {
                         <li><a href="/Login"><span class="fa fa-user"></span> Login</a></li>
                     }
 

@@ -83,4 +83,26 @@ public class CryptorEngine
         }
         return EncryptedData;
     }
+
+    public static string HashPassword(string password)
+    {
+        using (MD5 md5 = MD5.Create())
+        {
+            byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for (int i = 0; i < hashBytes.Length; i++)
+            {
+                stringBuilder.Append(hashBytes[i].ToString("x2"));
+            }
+
+            return stringBuilder.ToString();
+        }
+    }
+
+    public static bool VerifyPassword(string password, string hashedPassword)
+    {
+        string hashedInput = HashPassword(password);
+        return string.Equals(hashedInput, hashedPassword, StringComparison.OrdinalIgnoreCase);
+    }
 }

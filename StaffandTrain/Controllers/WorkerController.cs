@@ -7,6 +7,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using StaffandTrain.Models;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace StaffandTrain.Controllers
 {
@@ -26,12 +29,11 @@ namespace StaffandTrain.Controllers
             var WorkerList = context.Workers.ToList();
             return View(WorkerList);
         }
-        public ActionResult SaveWorker()
+        public ActionResult SaveWorker(int? Id)
         {
             WorkerModel objuser = new WorkerModel();
-            if (Request.QueryString["id"] != null)
+            if (Id != null)
             {
-                var Id = int.Parse(Request.QueryString["id"]);
                 var worker = context.Workers.FirstOrDefault(e => e.Id == Id);
 
                 if (worker != null)
@@ -39,7 +41,9 @@ namespace StaffandTrain.Controllers
                     objuser.Id = worker.Id;
                     objuser.Name = worker.Name;
                     objuser.Email = worker.Email;
+                    objuser.OldPassword = worker.Password;
                     objuser.CheckIn = worker.CheckIn;
+                    objuser.CreateDate = worker.CreateDate;
                 }
                     
 
@@ -51,46 +55,64 @@ namespace StaffandTrain.Controllers
             return View(objuser);
         }
         [HttpPost]
-        public ActionResult SaveWorkerData(Worker obj)
+        public ActionResult SaveWorkerData(WorkerModel obj)
         {
-            var worker = new Worker();
             try
             {
-                worker = new Worker
+                // Validate Email Duplication
+                var worker = context.Workers.FirstOrDefault(e => e.Email == obj.Email);
+                if (worker != null && worker.Id != obj.Id)
                 {
-                    Id = obj.Id,
-                    Name = obj.Name,
-                    Email = obj.Email,
-                    CheckIn = obj.CheckIn,
-                    Password = obj.Password,
-                    ModifiedDate = DateTime.Now,
-                    CreateDate = DateTime.Now,
-                };
-                if (obj.Id == 0)
+                    throw new Exception("This worker email already registered!");
+                }
+
+                // Encrypt Password
+                string password= string.Empty;
+                DateTime createDate;
+                DateTime modifyDate;
+                if (obj.Id > 0)
                 {
-                    context.Workers.Add(worker);
-                    //context.SPInsertCompanies(obj.citycircle, objcomp.biztype, objcomp.name, objcomp.addr1, objcomp.addr2, objcomp.city, objcomp.state, objcomp.zip, objcomp.weburl, objcomp.phone, objcomp.priority, objcomp.target, objcomp.combinednotes, objcomp.adminnotes, objcomp.notes, objcomp.listid);
-                    context.SaveChanges();
-                    TempData["Message"] = "Record Saved";
+                    if (obj.Password != null)
+                    {
+                        password = CryptorEngine.HashPassword(obj.Password);
+                    } else
+                    {
+                        password = obj.OldPassword;
+                    }
+                    createDate = obj.CreateDate;
+                    modifyDate = DateTime.Now;
+                    TempData["Message"] = "Worker Updated";
+
                 } else
                 {
-                    //context.SPupdateCompanies(objcomp.citycircle, objcomp.biztype, objcomp.name, objcomp.addr1, objcomp.addr2, objcomp.city, objcomp.state, objcomp.zip, objcomp.weburl, objcomp.phone, objcomp.priority, objcomp.target, objcomp.combinednotes, objcomp.adminnotes, objcomp.notes, objcomp.companyid, objcomp.listid);
-                    context.SaveChanges();
-                    TempData["Message"] = "Record Updated";
-
+                    password = CryptorEngine.HashPassword(obj.Password);
+                    createDate = DateTime.Now;
+                    modifyDate = DateTime.Now;
+                    TempData["Message"] = "Worker Saved";
+                    
                 }
+                context.SPInsertOrUpdateWorker(obj.Id, obj.Name, obj.Email, password, obj.CheckIn, createDate, modifyDate);
+                context.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["Message"] = "Some Error Occured";
-                return View("SaveWorker", worker);
+                TempData["Message"] = "Some Error Occured: " + ex.Message;
+                return RedirectToAction("SaveWorker", obj);
             }
         }
-        public ActionResult DeleteWorker(Worker obj)
+        public ActionResult DeleteWorker(int Id)
         {
-            var id = Request.QueryString["id"];
+            var worker = context.Workers.FirstOrDefault(e => e.Id == Id);
+
+            if (worker != null)
+            {
+                context.SPDeleteWorker(Id);
+                context.SaveChanges();
+                TempData["Message"] = "Record Deleted";
+            }
             return RedirectToAction("index");
         }
+
     }
 }

@@ -44,12 +44,6 @@
 
                     </div>
                     <div class="col-sm-6 form-group">
-                        <label>Confirm Password</label>
-                        <input type="password" class="form-control" placeholder="Confirm Password" id="txtconpass">
-                        <div id="" class="validateTips"></div>
-
-                    </div>
-                    <div class="col-sm-6 form-group">
                         <label>Check In Time</label>
 
                         @Html.TextBoxFor(x => x.CheckIn, new { id = "txtcheckin", @placeholder = "Check In Time", @class = "form-control", @type = "time" })
@@ -70,6 +64,8 @@
                     </div>
                     <div style="display:none">
                         @Html.TextBoxFor(x => x.Id, new { id = "txtid" })
+                        @Html.TextBoxFor(x => x.OldPassword, new { id = "txtoldpsw" })
+                        @Html.TextBoxFor(x => x.CreateDate, new { id = "txtCreateDate" })
                     </div>
                 </div>
             </div> <!--end admin-form-->
