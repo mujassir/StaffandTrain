@@ -109,7 +109,7 @@ namespace StaffandTrain.Controllers
             {
                 context.SPDeleteWorker(Id);
                 context.SaveChanges();
-                TempData["Message"] = "Record Deleted";
+                TempData["Message"] = "Worker Deleted";
             }
             return RedirectToAction("index");
         }

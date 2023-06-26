@@ -17,7 +17,7 @@
 <h3 class="section">Workers</h3>
 <div class="divcreate"><a href="/Worker/SaveWorker" class="btn btn-success" id="lnkcreate">Create New   <i class="fa fa-plus" aria-hidden="true"></i></a> </div>
 
-@if (@ViewBag.message != null && (@ViewBag.message == "Worker Deleted" || @ViewBag.message == "Worker Created" || @ViewBag.message == "Worker Updated"))
+@if (@ViewBag.message == "Worker Deleted" || @ViewBag.message == "Worker Created" || @ViewBag.message == "Worker Saved" || @ViewBag.message == "Worker Updated")
 {
     <div id="" class="alert alert-success">@ViewBag.Message</div>
 }

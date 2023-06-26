@@ -11,11 +11,11 @@
 <div class="container main-ctn">
     <h1 class="title">Add/Edit Worker</h1>
 
-    @if (@ViewBag.Message != null && @ViewBag.Message == "Worker Saved" || @ViewBag.Message == "Worker Updated")
+    @if (ViewBag.Message == "Worker Saved" || ViewBag.Message == "Worker Updated")
     {
         <div id="" class="alert alert-success">@ViewBag.Message</div>
     }
-    else if (@ViewBag.Message != null)
+    else if (ViewBag.Message != null)
     {
         <div id="" class="alert alert-danger">@ViewBag.Message</div>
     }

@@ -29,7 +29,7 @@ namespace StaffandTrain
 
         private void StartTimer()
         {
-            timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
+            timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
         }
 
         private void TimerCallback(object state)
