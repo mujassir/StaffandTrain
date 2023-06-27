@@ -33,7 +33,8 @@ namespace StaffandTrain.Controllers
 
                 context.SPInsertOrUpdateWorkerLog(0, worker.Id, worker.Name + " Worker Logged in At " + DateTime.Now, "LogIn", DateTime.Now);
                 context.SaveChanges();
-                SendEmail.SendSMTPEmail(worker.Email,  "Good Morning App - Logged In", "Hello " + worker.Name + ", you have logged in successfully At " + DateTime.Now);
+                SendEmail mail = new SendEmail();
+                mail.SendSMTPEmail(worker.Email,  "Good Morning App - Logged In", "Hello " + worker.Name + ", you have logged in successfully At " + DateTime.Now);
 
                 TempData["Message"] = "Checked In Successfully!";
                 return RedirectToAction("Index");

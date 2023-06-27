@@ -309,6 +309,9 @@
     <Compile Include="DataModel\Company.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataModel\Config.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataModel\Contact.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -349,6 +352,9 @@
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DataModel\location.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\Log.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DataModel\Newsletter.cs">

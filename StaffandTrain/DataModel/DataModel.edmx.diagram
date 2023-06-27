@@ -82,6 +82,8 @@
         <AssociationConnector Association="Staffandtrain_NewModel.aspnet_UsersInRoles" />
         <EntityTypeShape EntityType="Staffandtrain_NewModel.Worker" Width="1.5" PointX="0.75" PointY="23.25" />
         <EntityTypeShape EntityType="Staffandtrain_NewModel.WorkersLog" Width="1.5" PointX="14.375" PointY="23.75" />
+        <EntityTypeShape EntityType="Staffandtrain_NewModel.Log" Width="1.5" PointX="23.375" PointY="16.75" />
+        <EntityTypeShape EntityType="Staffandtrain_NewModel.Config" Width="1.5" PointX="16.375" PointY="23.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

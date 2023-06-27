@@ -93,6 +93,8 @@ namespace StaffandTrain.DataModel
         public virtual DbSet<vw_aspnet_WebPartState_User> vw_aspnet_WebPartState_User { get; set; }
         public virtual DbSet<Worker> Workers { get; set; }
         public virtual DbSet<WorkersLog> WorkersLogs { get; set; }
+        public virtual DbSet<Log> Logs { get; set; }
+        public virtual DbSet<Config> Configs { get; set; }
     
         public virtual ObjectResult<string> aspnet_AnyDataInTables(Nullable<int> tablesToCheck)
         {
@@ -2791,6 +2793,31 @@ namespace StaffandTrain.DataModel
                 new ObjectParameter("CreateDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SPInsertOrUpdateWorkerLog", idParameter, workerIdParameter, descriptionParameter, logTypeParameter, createDateParameter);
+        }
+    
+        public virtual int SPInsertOrUpdateLog(Nullable<int> id, string status, string type, string description, Nullable<int> recordId)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            var typeParameter = type != null ?
+                new ObjectParameter("Type", type) :
+                new ObjectParameter("Type", typeof(string));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("Description", description) :
+                new ObjectParameter("Description", typeof(string));
+    
+            var recordIdParameter = recordId.HasValue ?
+                new ObjectParameter("RecordId", recordId) :
+                new ObjectParameter("RecordId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SPInsertOrUpdateLog", idParameter, statusParameter, typeParameter, descriptionParameter, recordIdParameter);
         }
     }
 }
