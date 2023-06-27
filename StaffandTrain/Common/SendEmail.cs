@@ -96,13 +96,13 @@ namespace StaffandTrain.Common
         public void SendSMTPEmail(string recipientEmail, string subject, string body)
         {
             // Email parameters
-            string senderEmail = "goodmorning@nearshore-usa.com";
-            string senderPassword = "Ideas321!";
+            string senderEmail = ConfigurationManager.AppSettings["EmailSender"];
+            string senderPassword = ConfigurationManager.AppSettings["EmailSenderPassword"];
 
             // SMTP server details
-            string smtpHost = "mail.nearshore-usa.com";
-            int smtpPort = 2525; // Port number for the SMTP server
-            bool enableSsl = false; // Set it to true if your SMTP server requires SSL/TLS
+            string smtpHost = ConfigurationManager.AppSettings["EmailSMTPHost"];
+            int smtpPort = int.Parse(ConfigurationManager.AppSettings["EmailSMTPPort"]);
+            bool enableSsl = bool.Parse(ConfigurationManager.AppSettings["EmailEnableSSL"]);
 
             try
             {
@@ -126,7 +126,7 @@ namespace StaffandTrain.Common
             }
             catch (Exception ex)
             {
-                context.SPInsertOrUpdateLog(0, "Error", "Email", "Email Not Sent to: " + recipientEmail, null);
+                context.SPInsertOrUpdateLog(0, "Error", "Email", "Email Not Sent to: " + recipientEmail + " / Error: " + ex.Message, null);
                 Console.WriteLine("Error sending email: " + ex.Message);
             }
         }
@@ -135,28 +135,34 @@ namespace StaffandTrain.Common
         {
             context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Scheduler. run at: " + DateTime.Now, null);
             // Email those workers which 15 minutes are remaining to login
+            int beforeMin = int.Parse(ConfigurationManager.AppSettings["EmailWorkerBeforeCheckIn"]);
             DateTime currentTime = DateTime.Now;
-            DateTime endTime = currentTime.AddMinutes(15); // Update 15 value as per required minutes
+            DateTime endTime = currentTime.AddMinutes(beforeMin); 
 
-            var workers = context.Workers.Where(e => e.CheckIn > currentTime.TimeOfDay && e.CheckIn <= endTime.TimeOfDay).ToList();
+            var workers = context.Workers
+                .Where(e => e.CheckIn.Hours == endTime.Hour && e.CheckIn.Minutes == endTime.Minute)
+                .ToList();
             if (workers.Count() > 0)
             {
                 foreach (var worker in workers)
                 {
-                    var subject = "Quick Reminder: 15 Minutes Left to Log In!"; // Update 15 value as per required minutes
+                    var subject = "Quick Reminder: " + beforeMin + " Minutes Left to Log In!";
                     var body = "Please log in at your designated time.";
                     SendSMTPEmail(worker.Email, subject, body);
                     context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to login scheduler. run at: " + DateTime.Now, null);
                 }
             }
 
-            
+
 
             // Email those workers which are not login
-            DateTime currentTime1= currentTime.AddMinutes(-15);
-            DateTime endTime1 = DateTime.Now;
+            int min = int.Parse(ConfigurationManager.AppSettings["EmailWorkerNotCheckIn"]);
+            DateTime currentTime1= currentTime.AddMinutes(min * -1);
 
-            var workers1 = context.Workers.Where(e => e.CheckIn > currentTime1.TimeOfDay && e.CheckIn <= endTime1.TimeOfDay).ToList();
+            var workers1 = context.Workers
+                .Where(e => e.CheckIn.Hours == currentTime1.Hour && e.CheckIn.Minutes == currentTime1.Minute)
+                .ToList();
+
             if (workers1.Count() > 0)
             {
                 var workersName = "";

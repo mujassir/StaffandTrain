@@ -34,17 +34,21 @@ namespace StaffandTrain.Controllers
                 context.SPInsertOrUpdateWorkerLog(0, worker.Id, worker.Name + " Worker Logged in At " + DateTime.Now, "LogIn", DateTime.Now);
                 context.SaveChanges();
                 SendEmail mail = new SendEmail();
-                mail.SendSMTPEmail(worker.Email,  "Good Morning App - Logged In", "Hello " + worker.Name + ", you have logged in successfully At " + DateTime.Now);
+                mail.SendSMTPEmail(worker.Email, "Good Morning App - Logged In", "Hello " + worker.Name + ", you have logged in successfully At " + DateTime.Now);
 
-                TempData["Message"] = "Checked In Successfully!";
-                return RedirectToAction("Index");
+                //TempData["Message"] = "Checked In Successfully!";
+                //return RedirectToAction("Index");
+                var url = "https://nearshore-staffing.com/worker-check-in/?s=1&message=" + "Checked In Successfully!";
+                return Redirect(url);
             }
             catch (Exception ex)
             {
-                TempData["Message"] = ex.Message;
-                return RedirectToAction("Index");
+                var url = "https://nearshore-staffing.com/worker-check-in/?s=0&message=" + ex.Message;
+                return Redirect(url);
+                //TempData["Message"] = ex.Message;
+                //return RedirectToAction("Index");
             }
         }
     }
-    
+
 }
