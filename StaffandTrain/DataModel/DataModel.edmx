@@ -217,6 +217,22 @@
           <Property Name="phone" Type="nvarchar" MaxLength="50" />
           <Property Name="notes" Type="nvarchar(max)" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.Config' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Config">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Key" />
+            <PropertyRef Name="Value" />
+            <PropertyRef Name="CreateAt" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Key" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="CreateAt" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Contacts">
           <Key>
             <PropertyRef Name="contactid" />
@@ -311,6 +327,23 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.locations' does n
           </Key>
           <Property Name="locid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="locname" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.Logs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Logs">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Description" />
+            <PropertyRef Name="CreateAt" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="RecordId" Type="int" />
+          <Property Name="CreateAt" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.Newsletters' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1699,6 +1732,13 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Parameter Name="Subject" Type="varchar" Mode="In" />
           <Parameter Name="EmailBody" Type="varchar(max)" Mode="In" />
         </Function>
+        <Function Name="SPInsertOrUpdateLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Status" Type="nvarchar" Mode="In" />
+          <Parameter Name="Type" Type="nvarchar" Mode="In" />
+          <Parameter Name="Description" Type="nvarchar" Mode="In" />
+          <Parameter Name="RecordId" Type="int" Mode="In" />
+        </Function>
         <Function Name="SPInsertOrUpdateWorker" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Id" Type="int" Mode="In" />
           <Parameter Name="Name" Type="nvarchar" Mode="In" />
@@ -1844,6 +1884,15 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <EntitySet Name="User_Security_States" EntityType="Self.User_Security_States" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserProspectingList" EntityType="Self.UserProspectingList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WhiteBoardNames" EntityType="Self.WhiteBoardNames" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Config" EntityType="Self.Config" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Config].[Id] AS [Id], 
+    [Config].[Type] AS [Type], 
+    [Config].[Key] AS [Key], 
+    [Config].[Value] AS [Value], 
+    [Config].[CreateAt] AS [CreateAt]
+    FROM [dbo].[Config] AS [Config]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="ErrorLog" EntityType="Self.ErrorLog" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [ErrorLog].[LogID] AS [LogID], 
@@ -1889,6 +1938,16 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
     [locations].[locid] AS [locid], 
     [locations].[locname] AS [locname]
     FROM [dbo].[locations] AS [locations]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Logs" EntityType="Self.Logs" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Logs].[Id] AS [Id], 
+    [Logs].[Status] AS [Status], 
+    [Logs].[Type] AS [Type], 
+    [Logs].[Description] AS [Description], 
+    [Logs].[RecordId] AS [RecordId], 
+    [Logs].[CreateAt] AS [CreateAt]
+    FROM [dbo].[Logs] AS [Logs]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Newsletters" EntityType="Self.Newsletters" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -3263,6 +3322,15 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
             <Parameter Name="LogType" Mode="In" Type="String" />
             <Parameter Name="CreateDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="Logs" EntityType="Staffandtrain_NewModel.Log" />
+          <FunctionImport Name="SPInsertOrUpdateLog">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="Type" Mode="In" Type="String" />
+            <Parameter Name="Description" Mode="In" Type="String" />
+            <Parameter Name="RecordId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Configs" EntityType="Staffandtrain_NewModel.Config" />
         </EntityContainer>
         <EntityType Name="aspnet_Applications">
           <Key>
@@ -4774,6 +4842,35 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="LogType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Description" />
+            <PropertyRef Name="CreateAt" />
+            <PropertyRef Name="Status" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="RecordId" Type="Int32" />
+          <Property Name="CreateAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Config">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Key" />
+            <PropertyRef Name="Value" />
+            <PropertyRef Name="CreateAt" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Key" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreateAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -6416,6 +6513,30 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SPInsertOrUpdateWorkerLog" FunctionName="Staffandtrain_NewModel.Store.SPInsertOrUpdateWorkerLog" />
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="Staffandtrain_NewModel.Log">
+              <MappingFragment StoreEntitySet="Logs">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreateAt" ColumnName="CreateAt" />
+                <ScalarProperty Name="RecordId" ColumnName="RecordId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SPInsertOrUpdateLog" FunctionName="Staffandtrain_NewModel.Store.SPInsertOrUpdateLog" />
+          <EntitySetMapping Name="Configs">
+            <EntityTypeMapping TypeName="Staffandtrain_NewModel.Config">
+              <MappingFragment StoreEntitySet="Config">
+                <ScalarProperty Name="CreateAt" ColumnName="CreateAt" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

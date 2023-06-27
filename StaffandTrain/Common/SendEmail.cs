@@ -93,7 +93,7 @@ namespace StaffandTrain.Common
             return emailResult;
         }
 
-        public static void SendSMTPEmail(string recipientEmail, string subject, string body)
+        public void SendSMTPEmail(string recipientEmail, string subject, string body)
         {
             // Email parameters
             string senderEmail = "goodmorning@nearshore-usa.com";
@@ -121,10 +121,12 @@ namespace StaffandTrain.Common
                     }
 
                     Console.WriteLine("Email sent successfully.");
+                    context.SPInsertOrUpdateLog(0, "Success", "Email", "Email Sent to: " + recipientEmail, null);
                 }
             }
             catch (Exception ex)
             {
+                context.SPInsertOrUpdateLog(0, "Error", "Email", "Email Not Sent to: " + recipientEmail, null);
                 Console.WriteLine("Error sending email: " + ex.Message);
             }
         }
@@ -143,6 +145,7 @@ namespace StaffandTrain.Common
                     var subject = "Quick Reminder: 15 Minutes Left to Log In!"; // Update 15 value as per required minutes
                     var body = "Please log in at your designated time.";
                     SendSMTPEmail(worker.Email, subject, body);
+                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to login scheduler. run at: " + DateTime.Now, null);
                 }
             }
 
@@ -164,13 +167,19 @@ namespace StaffandTrain.Common
                     var subject = "Quick Reminder: Your Log In time expired!";
                     var body = "Your Log In time expired!";
                     SendSMTPEmail(worker.Email, subject, body);
+                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to expired login. scheduler run at: " + DateTime.Now, null);
                 }
 
-                if (workersName != "")
+                var AdminEmails = context.Configs.Where(e => e.Type == "Admin Emails").ToList();
+                if (workersName != "" && AdminEmails.Count > 0)
                 {
                     var subject = "Reminder: Not Logged Workers!";
                     var body = workersName + " Workers are not logged In on time.";
-                    SendSMTPEmail("Admin@email.com", subject, body);
+                    foreach (var email in AdminEmails)
+                    {
+                        SendSMTPEmail(email.Value, subject, body);
+                    }
+                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Admin inform to expired login. scheduler run at: " + DateTime.Now, null);
                 }
             }
         }
