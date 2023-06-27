@@ -133,6 +133,7 @@ namespace StaffandTrain.Common
     
         public void ScheduleWorkerEmail()
         {
+            context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Scheduler. run at: " + DateTime.Now, null);
             // Email those workers which 15 minutes are remaining to login
             DateTime currentTime = DateTime.Now;
             DateTime endTime = currentTime.AddMinutes(15); // Update 15 value as per required minutes
