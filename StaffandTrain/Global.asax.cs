@@ -1,12 +1,10 @@
-﻿using StaffandTrain.App_Start;
-using StaffandTrain.Common;
+﻿using StaffandTrain.Common;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -20,15 +18,7 @@ namespace StaffandTrain
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteTable.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = System.Web.Http.RouteParameter.Optional }
-            );
-            
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);            
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             BundleTable.EnableOptimizations = true;
