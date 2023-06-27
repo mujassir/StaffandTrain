@@ -108,7 +108,7 @@ namespace StaffandTrain.Common
             {
                 using (MailMessage mailMessage = new MailMessage())
                 {
-                    mailMessage.From = new MailAddress(senderEmail);
+                    mailMessage.From = new MailAddress(senderEmail, "Nearshore USA Morning App");
                     mailMessage.To.Add(recipientEmail);
                     mailMessage.Subject = subject;
                     mailMessage.Body = body;
