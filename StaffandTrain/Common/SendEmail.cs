@@ -98,6 +98,7 @@ namespace StaffandTrain.Common
             // Email parameters
             string senderEmail = ConfigurationManager.AppSettings["EmailSender"];
             string senderPassword = ConfigurationManager.AppSettings["EmailSenderPassword"];
+            string senderDisplayName = ConfigurationManager.AppSettings["EmailSenderDisplayName"];
 
             // SMTP server details
             string smtpHost = ConfigurationManager.AppSettings["EmailSMTPHost"];
@@ -108,7 +109,7 @@ namespace StaffandTrain.Common
             {
                 using (MailMessage mailMessage = new MailMessage())
                 {
-                    mailMessage.From = new MailAddress(senderEmail, "Nearshore USA Morning App");
+                    mailMessage.From = new MailAddress(senderEmail, senderDisplayName);
                     mailMessage.To.Add(recipientEmail);
                     mailMessage.Subject = subject;
                     mailMessage.Body = body;
@@ -121,12 +122,12 @@ namespace StaffandTrain.Common
                     }
 
                     Console.WriteLine("Email sent successfully.");
-                    context.SPInsertOrUpdateLog(0, "Success", "Email", "Email Sent to: " + recipientEmail, null);
+                    context.SPInsertOrUpdateLog(0, "Success", "SendEmail", "Email Sent to: " + recipientEmail, null);
                 }
             }
             catch (Exception ex)
             {
-                context.SPInsertOrUpdateLog(0, "Error", "Email", "Email Not Sent to: " + recipientEmail + " / Error: " + ex.Message, null);
+                context.SPInsertOrUpdateLog(0, "Error", "SendEmail",  string.Format("Message: {0} \nStack Trace: {1}\nInner Exception: {2}", ex.Message, ex.StackTrace, ex.InnerException), null);
                 Console.WriteLine("Error sending email: " + ex.Message);
             }
         }
