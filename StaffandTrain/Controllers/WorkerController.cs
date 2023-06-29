@@ -27,6 +27,7 @@ namespace StaffandTrain.Controllers
                 ViewBag.message = TempData["Message"];
             }
             var WorkerList = context.Workers.ToList();
+            ViewBag.ServerTime = DateTime.Now.ToString("hh:mm:ss tt");
             return View(WorkerList);
         }
         public ActionResult SaveWorker(int? Id)
@@ -52,6 +53,7 @@ namespace StaffandTrain.Controllers
             {
                 ViewBag.message = TempData["Message"];
             }
+            ViewBag.ServerTime = DateTime.Now.ToString("hh:mm:ss tt");
             return View(objuser);
         }
         [HttpPost]

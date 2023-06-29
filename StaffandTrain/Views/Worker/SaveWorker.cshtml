@@ -19,6 +19,11 @@
     {
         <div id="" class="alert alert-danger">@ViewBag.Message</div>
     }
+
+    <div style="font-weight: bold; margin:auto; width: 800px;">
+        Server Time: @ViewBag.ServerTime
+    </div>
+
     @using (Html.BeginForm("SaveWorkerData", "Worker", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         <div class="admin-form">

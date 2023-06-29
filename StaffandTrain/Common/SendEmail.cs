@@ -147,8 +147,8 @@ namespace StaffandTrain.Common
             {
                 foreach (var worker in workers)
                 {
-                    var subject = "Quick Reminder: " + beforeMin + " Minutes Left to Log In!";
-                    var body = "Please log in at your designated time.";
+                    var subject = "Good Morning App - Check In Reminder";
+                    var body = "Hello " + worker.Name + ", \n\n" + beforeMin + " minutes left, please check in before your designated time: " + DateTime.Today.Add(worker.CheckIn).ToString("hh:mm:ss tt") + "\n\nNearshore Staffing ";
                     SendSMTPEmail(worker.Email, subject, body);
                     context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to login scheduler. run at: " + DateTime.Now, null);
                 }
@@ -172,8 +172,8 @@ namespace StaffandTrain.Common
                     if (workersName != "") workersName += ", ";
                     workersName += worker.Name;
 
-                    var subject = "Quick Reminder: Your Log In time expired!";
-                    var body = "Your Log In time expired!";
+                    var subject = "Good Morning App - Late Reminder";
+                    var body = "Hello " + worker.Name + ", \n\nYour designated check in time: " + DateTime.Today.Add(worker.CheckIn).ToString("hh:mm:ss tt") + " has passed and you were unable to check in" + "\n\nNearshore Staffing ";
                     SendSMTPEmail(worker.Email, subject, body);
                     context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to expired login. scheduler run at: " + DateTime.Now, null);
                 }
@@ -181,8 +181,8 @@ namespace StaffandTrain.Common
                 var AdminEmails = context.Configs.Where(e => e.Type == "Admin Emails").ToList();
                 if (workersName != "" && AdminEmails.Count > 0)
                 {
-                    var subject = "Reminder: Not Logged Workers!";
-                    var body = workersName + " Workers are not logged In on time.";
+                    var subject = "Good Morning App - Workers Not Checked In";
+                    var body = workersName + " Workers are not checked in on time.";
                     foreach (var email in AdminEmails)
                     {
                         SendSMTPEmail(email.Value, subject, body);
