@@ -3,6 +3,7 @@ using StaffandTrain.DataModel;
 using StaffandTrain.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -30,6 +31,10 @@ namespace StaffandTrain.Controllers
 
                 bool verifyPassword = CryptorEngine.VerifyPassword(obj.Password, worker.Password);
                 if (verifyPassword == false) throw new Exception("Invalid Password!");
+
+                var currentDate = DateTime.Now;
+                var workerLog = context.WorkersLogs.FirstOrDefault(e => e.WorkerId == worker.Id && DbFunctions.TruncateTime(e.CreateDate) == currentDate.Date);
+                if (workerLog != null) throw new Exception("You are already Checked In!");
 
                 context.SPInsertOrUpdateWorkerLog(0, worker.Id, worker.Name + " Worker Logged in At " + DateTime.Now, "LogIn", DateTime.Now);
                 context.SaveChanges();
