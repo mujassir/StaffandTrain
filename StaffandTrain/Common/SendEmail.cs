@@ -148,7 +148,7 @@ namespace StaffandTrain.Common
                 foreach (var worker in workers)
                 {
                     var subject = "Good Morning App - Check In Reminder";
-                    var body = "Hello " + worker.Name + ", \n\n" + beforeMin + " minutes left, please check in before your designated time: " + DateTime.Today.Add(worker.CheckIn).ToString("hh:mm:ss tt") + "\n\nNearshore Staffing ";
+                    var body = "Hello " + worker.Name + ", \n\n" + beforeMin + " minutes left, please check in before your designated time: " + getCheckInTime(worker.CheckIn) + "\n\nNearshore Staffing ";
                     SendSMTPEmail(worker.Email, subject, body);
                     context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to login scheduler. run at: " + DateTime.Now, null);
                 }
@@ -175,14 +175,20 @@ namespace StaffandTrain.Common
                     context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to expired login. scheduler run at: " + DateTime.Now, null);
 
                     var subject = "Good Morning App - Late Reminder";
-                    var body = "Hello " + worker.Name + ", \n\nYour designated check in time: " + DateTime.Today.Add(worker.CheckIn).ToString("hh:mm:ss tt") + " has passed and you were unable to check in" + "\n\nNearshore Staffing ";
+                    var body = "Hello " + worker.Name + ", \n\nYour designated check in time: " + getCheckInTime(worker.CheckIn) + " has passed and you were unable to check in" + "\n\nNearshore Staffing ";
                     SendSMTPEmail(worker.Email, subject, body);
 
                     var adminsubject = "Good Morning App - Late Worker Notification";
-                    var adminbody = "Hello Admins,\n\n The worker " + worker.Name + " is not able to check in at designated time: " + DateTime.Today.Add(worker.CheckIn).ToString("hh:mm:ss tt") + "\n\nNearshore Staffing ";
+                    var adminbody = "Hello Admins,\n\n The worker " + worker.Name + " is not able to check in at designated time: " + getCheckInTime(worker.CheckIn) + "\n\nNearshore Staffing ";
                     SendSMTPEmail(adminEmails, adminsubject, adminbody);
                 }
             }
+        }
+
+        private string getCheckInTime(TimeSpan checkInTime) 
+        {
+            var timeZoneHours = int.Parse(ConfigurationManager.AppSettings["TimeZoneHours"]);
+            return DateTime.Today.Add(checkInTime).AddHours(timeZoneHours).ToString("hh:mm:ss tt");
         }
     }
 
