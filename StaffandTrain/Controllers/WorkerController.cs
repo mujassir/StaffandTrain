@@ -10,6 +10,9 @@ using StaffandTrain.Models;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNet.Identity;
+using ClosedXML.Excel;
+using System.Configuration;
 
 namespace StaffandTrain.Controllers
 {
@@ -27,7 +30,8 @@ namespace StaffandTrain.Controllers
                 ViewBag.message = TempData["Message"];
             }
             var WorkerList = context.Workers.ToList();
-            ViewBag.ServerTime = DateTime.Now.ToString("hh:mm:ss tt");
+            WorkerList.ForEach(p => p.CheckIn += TimeSpan.FromHours(getTimeZoneHours()));
+            ViewBag.ServerTime = DateTime.Now.AddHours(getTimeZoneHours()).ToString("hh:mm:ss tt");
             return View(WorkerList);
         }
         public ActionResult SaveWorker(int? Id)
@@ -46,14 +50,13 @@ namespace StaffandTrain.Controllers
                     objuser.CheckIn = worker.CheckIn;
                     objuser.CreateDate = worker.CreateDate;
                 }
-                    
-
+                objuser.CheckIn += TimeSpan.FromHours(getTimeZoneHours());
             }
             if (TempData["Message"] != null)
             {
                 ViewBag.message = TempData["Message"];
             }
-            ViewBag.ServerTime = DateTime.Now.ToString("hh:mm:ss tt");
+            ViewBag.ServerTime = DateTime.Now.AddHours(getTimeZoneHours()).ToString("hh:mm:ss tt");
             return View(objuser);
         }
         [HttpPost]
@@ -93,6 +96,7 @@ namespace StaffandTrain.Controllers
                     TempData["Message"] = "Worker Saved";
                     
                 }
+                obj.CheckIn -= TimeSpan.FromHours(getTimeZoneHours());
                 context.SPInsertOrUpdateWorker(obj.Id, obj.Name, obj.Email, password, obj.CheckIn, createDate, modifyDate);
                 context.SaveChanges();
                 return RedirectToAction("Index");
@@ -116,5 +120,10 @@ namespace StaffandTrain.Controllers
             return RedirectToAction("index");
         }
 
+        private int getTimeZoneHours()
+        {
+           var timeZoneHours =  int.Parse(ConfigurationManager.AppSettings["TimeZoneHours"]);
+            return timeZoneHours;
+        }
     }
 }
