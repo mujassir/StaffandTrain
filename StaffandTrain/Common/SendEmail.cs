@@ -157,6 +157,7 @@ namespace StaffandTrain.Common
 
 
             // Email those workers which are not login
+            string adminEmails = ConfigurationManager.AppSettings["LateNotificationAdminEmails"];
             int min = int.Parse(ConfigurationManager.AppSettings["EmailWorkerNotCheckIn"]);
             DateTime currentTime1= currentTime.AddMinutes(min * -1);
 
@@ -171,23 +172,15 @@ namespace StaffandTrain.Common
                 {
                     if (workersName != "") workersName += ", ";
                     workersName += worker.Name;
+                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to expired login. scheduler run at: " + DateTime.Now, null);
 
                     var subject = "Good Morning App - Late Reminder";
                     var body = "Hello " + worker.Name + ", \n\nYour designated check in time: " + DateTime.Today.Add(worker.CheckIn).ToString("hh:mm:ss tt") + " has passed and you were unable to check in" + "\n\nNearshore Staffing ";
                     SendSMTPEmail(worker.Email, subject, body);
-                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to expired login. scheduler run at: " + DateTime.Now, null);
-                }
 
-                var AdminEmails = context.Configs.Where(e => e.Type == "Admin Emails").ToList();
-                if (workersName != "" && AdminEmails.Count > 0)
-                {
-                    var subject = "Good Morning App - Workers Not Checked In";
-                    var body = workersName + " Workers are not checked in on time.";
-                    foreach (var email in AdminEmails)
-                    {
-                        SendSMTPEmail(email.Value, subject, body);
-                    }
-                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Admin inform to expired login. scheduler run at: " + DateTime.Now, null);
+                    var adminsubject = "Good Morning App - Late Worker Notification";
+                    var adminbody = "Hello Admins,\n\n The worker " + worker.Name + " is not able to check in at designated time: " + DateTime.Today.Add(worker.CheckIn).ToString("hh:mm:ss tt") + "\n\nNearshore Staffing ";
+                    SendSMTPEmail(adminEmails, adminsubject, adminbody);
                 }
             }
         }
