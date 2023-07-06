@@ -14,6 +14,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using StaffandTrain.DataModel;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
+using System.Data.Entity;
 
 /// <summary>
 /// Summary description for SendEmail
@@ -96,6 +97,8 @@ namespace StaffandTrain.Common
         public void SendSMTPEmail(string recipientEmail, string subject, string body)
         {
             // Email parameters
+            if (!bool.Parse(ConfigurationManager.AppSettings["ActiveEmailSender"])) return;
+
             string senderEmail = ConfigurationManager.AppSettings["EmailSender"];
             string senderPassword = ConfigurationManager.AppSettings["EmailSenderPassword"];
             string senderDisplayName = ConfigurationManager.AppSettings["EmailSenderDisplayName"];
@@ -145,12 +148,17 @@ namespace StaffandTrain.Common
                 .ToList();
             if (workers.Count() > 0)
             {
+                var currentDate = DateTime.Now;
                 foreach (var worker in workers)
                 {
-                    var subject = "Good Morning App - Check In Reminder";
-                    var body = "Hello " + worker.Name + ", \n\n" + beforeMin + " minutes left, please check in before your designated time: " + getCheckInTime(worker.CheckIn) + "\n\nNearshore Staffing ";
-                    SendSMTPEmail(worker.Email, subject, body);
-                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to login scheduler. run at: " + DateTime.Now, null);
+                    var workerLog = context.WorkersLogs.FirstOrDefault(e => e.WorkerId == worker.Id && DbFunctions.TruncateTime(e.CreateDate) == currentDate.Date);
+                    if (workerLog == null)
+                    {
+                        var subject = "Good Morning App - Check In Reminder";
+                        var body = "Hello " + worker.Name + ", \n\n" + beforeMin + " minutes left, please check in before your designated time: " + getCheckInTime(worker.CheckIn) + "\n\nNearshore Staffing ";
+                        SendSMTPEmail(worker.Email, subject, body);
+                        context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to login scheduler. run at: " + DateTime.Now, null);
+                    }
                 }
             }
 
@@ -167,20 +175,26 @@ namespace StaffandTrain.Common
 
             if (workers1.Count() > 0)
             {
+                var currentDate = DateTime.Now;
                 var workersName = "";
                 foreach (var worker in workers1)
                 {
                     if (workersName != "") workersName += ", ";
                     workersName += worker.Name;
-                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to expired login. scheduler run at: " + DateTime.Now, null);
 
-                    var subject = "Good Morning App - Late Reminder";
-                    var body = "Hello " + worker.Name + ", \n\nYour designated check in time: " + getCheckInTime(worker.CheckIn) + " has passed and you were unable to check in" + "\n\nNearshore Staffing ";
-                    SendSMTPEmail(worker.Email, subject, body);
+                    var workerLog = context.WorkersLogs.FirstOrDefault(e => e.WorkerId == worker.Id && DbFunctions.TruncateTime(e.CreateDate) == currentDate.Date);
+                    if (workerLog == null)
+                    {
+                        context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to expired login. scheduler run at: " + DateTime.Now, null);
 
-                    var adminsubject = "Good Morning App - Late Worker Notification";
-                    var adminbody = "Hello Admins,\n\n The worker " + worker.Name + " is not able to check in at designated time: " + getCheckInTime(worker.CheckIn) + "\n\nNearshore Staffing ";
-                    SendSMTPEmail(adminEmails, adminsubject, adminbody);
+                        var subject = "Good Morning App - Late Reminder";
+                        var body = "Hello " + worker.Name + ", \n\nYour designated check in time: " + getCheckInTime(worker.CheckIn) + " has passed and you were unable to check in" + "\n\nNearshore Staffing ";
+                        SendSMTPEmail(worker.Email, subject, body);
+
+                        var adminsubject = "Good Morning App - Late Worker Notification";
+                        var adminbody = "Hello Admins,\n\n The worker " + worker.Name + " is not able to check in at designated time: " + getCheckInTime(worker.CheckIn) + "\n\nNearshore Staffing ";
+                        SendSMTPEmail(adminEmails, adminsubject, adminbody);
+                    }
                 }
             }
         }
