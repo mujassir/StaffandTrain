@@ -3,6 +3,7 @@ using StaffandTrain.DataModel;
 using StaffandTrain.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
@@ -39,7 +40,7 @@ namespace StaffandTrain.Controllers
                 context.SPInsertOrUpdateWorkerLog(0, worker.Id, worker.Name + " Worker Logged in At " + DateTime.Now, "LogIn", DateTime.Now);
                 context.SaveChanges();
                 SendEmail mail = new SendEmail();
-                mail.SendSMTPEmail(worker.Email, "Good Morning App - Logged In", "Hello " + worker.Name + ", you have logged in successfully At " + DateTime.Now);
+                mail.SendSMTPEmail(worker.Email, "Good Morning App - Logged In", "Hello " + worker.Name + ", you have logged in successfully At " + DateTime.Now.AddHours(getTimeZoneHours()).ToString("hh:mm:ss tt"));
 
                 //TempData["Message"] = "Checked In Successfully!";
                 //return RedirectToAction("Index");
@@ -53,6 +54,12 @@ namespace StaffandTrain.Controllers
                 //TempData["Message"] = ex.Message;
                 //return RedirectToAction("Index");
             }
+        }
+
+        private int getTimeZoneHours()
+        {
+            var timeZoneHours = int.Parse(ConfigurationManager.AppSettings["TimeZoneHours"]);
+            return timeZoneHours;
         }
     }
 
