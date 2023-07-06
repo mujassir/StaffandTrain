@@ -14,6 +14,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using StaffandTrain.DataModel;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
+using System.Data.Entity;
 
 /// <summary>
 /// Summary description for SendEmail
@@ -143,14 +144,20 @@ namespace StaffandTrain.Common
             var workers = context.Workers
                 .Where(e => e.CheckIn.Hours == endTime.Hour && e.CheckIn.Minutes == endTime.Minute)
                 .ToList();
+
             if (workers.Count() > 0)
             {
+                var currentDate = DateTime.Now;
                 foreach (var worker in workers)
                 {
-                    var subject = "Good Morning App - Check In Reminder";
-                    var body = "Hello " + worker.Name + ", \n\n" + beforeMin + " minutes left, please check in before your designated time: " + getCheckInTime(worker.CheckIn) + "\n\nNearshore Staffing ";
-                    SendSMTPEmail(worker.Email, subject, body);
-                    context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to login scheduler. run at: " + DateTime.Now, null);
+                    var workerLog = context.WorkersLogs.FirstOrDefault(e => e.WorkerId == worker.Id && DbFunctions.TruncateTime(e.CreateDate) == currentDate.Date);
+                    if (workerLog == null)
+                    {
+                        var subject = "Good Morning App - Check In Reminder";
+                        var body = "Hello " + worker.Name + ", \n\n" + beforeMin + " minutes left, please check in before your designated time: " + DateTime.Today.Add(worker.CheckIn).ToString("hh:mm:ss tt") + "\n\nNearshore Staffing ";
+                        SendSMTPEmail(worker.Email, subject, body);
+                        context.SPInsertOrUpdateLog(0, "Success", "Email Scheduler", "Worker inform to login scheduler. run at: " + DateTime.Now, null);
+                    }
                 }
             }
 
