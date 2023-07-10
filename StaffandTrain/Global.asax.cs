@@ -39,8 +39,12 @@ namespace StaffandTrain
 
         private void TimerCallback(object state)
         {
-            SendEmail email = new SendEmail();
-            email.ScheduleWorkerEmail();
+            DateTime date = DateTime.Now;
+            if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+            {
+                SendEmail email = new SendEmail();
+                email.ScheduleWorkerEmail();
+            }
         }
     }
 }
