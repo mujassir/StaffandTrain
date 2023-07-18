@@ -54,7 +54,10 @@
     <label id="IsAuthenticated" style="display:none">@Request.IsAuthenticated</label>
 
     <div class="container main-ctn">
-        <h1 class="title">Send Email Form</h1>
+        <h1 class="title" style="display: flex; justify-content: space-between">
+            Send Email Form
+            <a href="/EmailTemplate" class="btn btn-primary" id="lnkcreate">Email Template   <i class="fa fa-file" aria-hidden="true"></i></a>
+        </h1>
         <div class="admin-form">
             <div class="admin-ctn admin-ctnemail">
                 @if (@ViewBag.message != null && @ViewBag.message != "Error")
