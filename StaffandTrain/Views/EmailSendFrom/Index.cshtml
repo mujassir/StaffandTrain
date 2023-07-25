@@ -63,13 +63,13 @@
         </h1>
         <div class="admin-form">
             <div class="admin-ctn admin-ctnemail">
-                @if (@ViewBag.message != null && @ViewBag.message != "Error")
+                @if (@ViewBag.message != null && @ViewBag.message == "Error" || (@ViewBag.message != null && @ViewBag.message.StartsWith("Mail not sent")))
                 {
-                    <div id="" class="alert alert-success">@ViewBag.Message</div>
+                    <div id="" class="alert alert-danger">@ViewBag.Message</div>
                 }
                 else if (@ViewBag.message != null)
                 {
-                    <div id="" class="alert alert-danger">@ViewBag.Message</div>
+                    <div id="" class="alert alert-success">@ViewBag.Message</div>
                 }
                 <div class="col-sm-6 form-group">
                     <label>City Circle</label>
