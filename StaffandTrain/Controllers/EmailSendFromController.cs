@@ -280,6 +280,7 @@ namespace StaffandTrain.Controllers
         [ValidateInput(false)]
         public ActionResult Sendemail(EmailTemplate obj)
         {
+            var errorExist = "";
             try
             {
                 int prospectList = 0;
@@ -401,7 +402,8 @@ namespace StaffandTrain.Controllers
                             }
                             catch (Exception ex)
                             {
-                                continue;
+                                errorExist = "Mail not sent: " + ex.InnerException.Message;
+                                break;
                             }
                         }
 
@@ -424,7 +426,8 @@ namespace StaffandTrain.Controllers
                             }
                             catch (Exception ex)
                             {
-                                continue;
+                                errorExist = "Mail not sent: " + ex.InnerException.Message;
+                                break;
                             }
                         }
 
@@ -444,7 +447,10 @@ namespace StaffandTrain.Controllers
                 TempData["Message"] = "Error";
                 cm.ErrorExceptionLogingByService(ex.ToString(), "EmailSendFrom" + ":" + new StackTrace().GetFrame(0).GetMethod().Name, "Sendemail", "NA", "NA", "NA", "WEB");
             }
-
+            if(!string.IsNullOrEmpty(errorExist))
+            {
+                TempData["Message"] = errorExist;
+            }
             return RedirectToAction("Index");
         }
 
@@ -565,10 +571,11 @@ namespace StaffandTrain.Controllers
                     message.BodyEncoding = Encoding.Default;
                     message.Priority = MailPriority.High;
 
-                    // One second of delay while email processing in loop (BY SHIVAM)
-                    Thread.Sleep(5000);
 
                     SmtpMail.Send(message); //Smtpclient to send the mail message  
+
+                    // One second of delay while email processing in loop (BY SHIVAM)
+                    Thread.Sleep(5000);
                 }
 
                 Response.Write("Email has been sent");
@@ -577,9 +584,8 @@ namespace StaffandTrain.Controllers
             }
             catch (Exception ex)
             {
-                returnvalue = 0;
                 SendErrorToText(ex, ContactEmail);
-                Response.Write("Failed");
+                throw ex;
             }
 
             return returnvalue;
