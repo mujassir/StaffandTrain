@@ -134,7 +134,7 @@
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Password</label>
-                    @Html.TextBox("txtpassword", null, new { @class = "form-control", id = "txtpassword", name = "txtpassword", @type = "password" })
+                    @Html.TextBox("txtpassword", null, new { @class = "form-control", id = "txtpassword", name = "txtpassword", @type = "text" })
                     <div id="" class="validateTips"></div>
                 </div>
                 <div class="col-sm-6 form-group">
@@ -145,8 +145,8 @@
                 <div class="col-sm-6 form-group">
                     <label>Enable SSL</label>
                     <select id="ddlenablessl" name="ddlenablessl" class="form-control">
-                        <option value="1">Yes</option>
                         <option value="0">No</option>
+                        <option value="1">Yes</option>
                     </select>
                     <div id="" class="validateTips"></div>
                 </div>

@@ -62,7 +62,7 @@ namespace StaffandTrain.Controllers
             try
             {
                 biztype = context.SPgetbiztype(id).Select(xx => new SelectListItem { Value = xx.ToString(), Text = xx.ToString() }).ToList();
-                biztype.Insert(0, new SelectListItem { Value = "All", Text = "No Options" });
+                biztype.Insert(0, new SelectListItem { Value = "", Text = "No Options" });
             }
             catch (Exception ex)
             {
