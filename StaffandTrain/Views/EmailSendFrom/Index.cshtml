@@ -61,7 +61,7 @@
                 <a href="/EmailSendFrom/Index" class="btn btn-success" id="lnkcreate">Email Sender   <i class="fa fa-send" aria-hidden="true"></i></a>
             </div>
         </h1>
-        <div class="admin-form">
+        <div class="admin-form" style="max-width: 820px">
             <div class="admin-ctn admin-ctnemail">
                 @if (@ViewBag.message != null && @ViewBag.message == "Error" || (@ViewBag.message != null && @ViewBag.message.StartsWith("Mail not sent")))
                 {
@@ -114,8 +114,9 @@
 
                 <div class="col-sm-12 form-group editorsample">
                     <label>Template Body</label>
-                    @*@Html.TextArea("sampleEditor", new { @class = "ckeditor", @id = "sampleEditor" })*@
-                    @Html.TextAreaFor(x => x.EmailBody, new { @class = "summernote", @id = "message", @maxlength = "2500", name = "sampleEditor" }) @*Added by ST*@
+                    @Html.TextAreaFor(x => x.EmailBody, new { @class = "ckeditor", @id = "CKEditorContent" })
+                    @*@Html.TextArea("sampleEditor", new { @class = "ckeditor", @id = "sampleEditor" })@
+                        @Html.TextAreaFor(x => x.EmailBody, new { @class = "summernote", @id = "message", @maxlength = "2500", name = "sampleEditor" }) @*Added by ST*@
                     @*@Html.TextArea("sampleEditor", new { @class = "summernote", @id = "message", @maxlength = "2500", name = "sampleEditor" }) @*Added by ST*@
                     <div id="" class="validateTips"></div>
                 </div>
@@ -162,3 +163,23 @@
         </div>
     </div>
 }
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('CKEditorContent', {
+        filebrowserUploadUrl: '@Url.Action("UploadFile", "UploadHandler")?responseType=json',
+        toolbar: [
+            {
+                name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'RemoveFormat', 'Image', 'Link', 'Table', 'HorizontalRule',
+                    'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter',
+                    'JustifyRight', 'JustifyBlock', 'Maximize', 'Format', 'Font', 'FontSize']
+            }
+        ],
+
+
+    });
+</script>
+<style>
+    a.cke_button[href="javascript:void('Image')"] {
+        display: none;
+    }
+</style>
