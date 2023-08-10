@@ -508,43 +508,44 @@ namespace StaffandTrain.Controllers
 
                 // Logic for font size for Name section in Email Body Starts here [SHIVAM]
                 string first_name = fName[0] + ",<br/><br/>";
+                str = first_name + EmailBody;
 
-                if (fullbody != "")
-                {
-                    //Logic for adding name with email body by Shivam
-                    int firstChar = fullbody.IndexOf('>');
-                    int secondChar = fullbody.IndexOf('<', 2);
+                //if (fullbody != "")
+                //{
+                //    //Logic for adding name with email body by Shivam
+                //    int firstChar = fullbody.IndexOf('>');
+                //    int secondChar = fullbody.IndexOf('<', 2);
 
-                    if (firstChar == 2 && secondChar == 3)
-                    {
-                        int index = fullbody.IndexOf('>', 3);
-                        fullbody = fullbody.Insert(index + 1, first_name);
-                    }
-                    else
-                    {
-                        fullbody = fullbody.Insert(3, first_name);
-                    }
+                //    if (firstChar == 2 && secondChar == 3)
+                //    {
+                //        int index = fullbody.IndexOf('>', 3);
+                //        fullbody = fullbody.Insert(index + 1, first_name);
+                //    }
+                //    else
+                //    {
+                //        fullbody = fullbody.Insert(3, first_name);
+                //    }
 
-                    str = fullbody;
-                }
-                else
-                {
-                    //Logic for adding name with email body by Shivam
-                    int firstChar = EmailBody.IndexOf('>');
-                    int secondChar = EmailBody.IndexOf('<', 2);
+                //    str = fullbody;
+                //}
+                //else
+                //{
+                //    //Logic for adding name with email body by Shivam
+                //    int firstChar = EmailBody.IndexOf('>');
+                //    int secondChar = EmailBody.IndexOf('<', 2);
 
-                    if (firstChar == 2 && secondChar == 3)
-                    {
-                        int index = EmailBody.IndexOf('>', 2);
-                        EmailBody = EmailBody.Insert(index + 1, first_name);
-                    }
-                    else
-                    {
-                        EmailBody = EmailBody.Insert(3, first_name);
-                    }
+                //    if (firstChar == 2 && secondChar == 3)
+                //    {
+                //        int index = EmailBody.IndexOf('>', 2);
+                //        EmailBody = EmailBody.Insert(index + 1, first_name);
+                //    }
+                //    else
+                //    {
+                //        EmailBody = EmailBody.Insert(3, first_name);
+                //    }
 
-                    str = EmailBody;
-                }
+                //    str = EmailBody;
+                //}
                 // Logic for font size for Name section in Email Body Ends here [SHIVAM]
 
                 string mailBody = Server.HtmlDecode(str);

@@ -185,7 +185,9 @@ function bindtemplatetype() {
                     //$("#txtsubject").attr("disabled", "disabled");
                     $("#txtsubject").attr("Readonly", "True"); // ST
                     //CKEDITOR.instances['sampleEditor'].setData(data.EmailBody);
-                    $(".summernote").summernote("code", data.EmailBody);
+
+                    var editor = CKEDITOR.instances.CKEditorContent;
+                    editor.setData(data.EmailBody);
                 }
                 else {
                     window.location.href = "/Login/Index";
