@@ -49,6 +49,8 @@ namespace StaffandTrain.Controllers
             }
             catch (Exception ex)
             {
+                var common = new Common.Common();
+                common.ErrorExceptionLogingByService(ex.ToString(), "UploadFile", "UploadHandlerController", "NA", "NA", "NA", "WEB");
                 return Json(new
                 {
                     uploaded = 0,
