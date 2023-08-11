@@ -239,6 +239,7 @@
     <Compile Include="Controllers\RecruiterHomeController.cs" />
     <Compile Include="Controllers\RecruiterProspectController.cs" />
     <Compile Include="Controllers\SignUpController.cs" />
+    <Compile Include="Controllers\UploadHandlerController.cs" />
     <Compile Include="Controllers\WhiteBoardsController.cs" />
     <Compile Include="Controllers\WorkerCheckInController.cs" />
     <Compile Include="Controllers\WorkerController.cs" />
