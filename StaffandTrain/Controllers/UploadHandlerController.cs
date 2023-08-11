@@ -27,12 +27,15 @@ namespace StaffandTrain.Controllers
 
                     string fileUrl = Url.Content("~/UploadedFiles/" + uniqueFileName);
 
+                    Uri uri = new Uri(Request.Url.ToString());
+                    string domainWithPort = uri.GetLeftPart(UriPartial.Authority);
+
                     // Return a JSON response object
                     return Json(new
                     {
                         uploaded = 1,
                         fileName = uniqueFileName,
-                        url = ConfigurationManager.AppSettings["RootUrl"] + fileUrl
+                        url = domainWithPort + fileUrl
                     });
                 }
                 else
