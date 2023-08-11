@@ -27,6 +27,8 @@ namespace StaffandTrain.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(obj.Email) || string.IsNullOrEmpty(obj.Password)) throw new Exception("Invalid Data!");
+
                 var worker = context.Workers.FirstOrDefault(e => e.Email == obj.Email);
                 if (worker == null) throw new Exception("This worker not exist!");
 
@@ -44,12 +46,12 @@ namespace StaffandTrain.Controllers
 
                 //TempData["Message"] = "Checked In Successfully!";
                 //return RedirectToAction("Index");
-                var url = "https://nearshore-staffing.com/worker-check-in/?s=1&message=" + "Checked In Successfully!";
+                var url = "https://nearshore-staffing.com/worker-check-in/?s=1&message=" + Uri.EscapeDataString("Checked In Successfully!");
                 return Redirect(url);
             }
             catch (Exception ex)
             {
-                var url = "https://nearshore-staffing.com/worker-check-in/?s=0&message=" + ex.Message;
+                var url = "https://nearshore-staffing.com/worker-check-in/?s=0&message=" + Uri.EscapeDataString(ex.Message);
                 return Redirect(url);
                 //TempData["Message"] = ex.Message;
                 //return RedirectToAction("Index");
