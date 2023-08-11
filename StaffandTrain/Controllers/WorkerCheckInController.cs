@@ -27,7 +27,7 @@ namespace StaffandTrain.Controllers
         {
             try
             {
-                if (obj.Email == null || obj.Password == null) throw new Exception("Invalid Data!");
+                if (string.IsNullOrEmpty(obj.Email) || string.IsNullOrEmpty(obj.Password)) throw new Exception("Invalid Data!");
 
                 var worker = context.Workers.FirstOrDefault(e => e.Email == obj.Email);
                 if (worker == null) throw new Exception("This worker not exist!");
