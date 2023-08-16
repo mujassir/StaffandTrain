@@ -507,7 +507,7 @@ namespace StaffandTrain.Controllers
                 //string s = "<p> Dear " + fName[0] + ", </p>";
 
                 // Logic for font size for Name section in Email Body Starts here [SHIVAM]
-                string first_name = fName[0] + ",<br/><br/>";
+                string first_name = $"<p style=\"font-size: 14px\">{fName[0]},</p> <br/><br/>";
                 str = first_name + EmailBody;
 
                 //if (fullbody != "")
