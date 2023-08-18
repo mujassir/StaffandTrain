@@ -13,6 +13,8 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using StaffandTrain.Common;
 using System.Threading;
+using System.Text.RegularExpressions;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace StaffandTrain.Controllers
 {
@@ -412,7 +414,7 @@ namespace StaffandTrain.Controllers
                     else
                     {
                         var contact_details = context.SPGetDataForSendingEmailWithBizType(prospectList, titleStandard, BizzTYpe, start_index, end_index).ToList();
-
+                        
                         foreach (var item in contact_details)
                         {
                             try
@@ -504,51 +506,55 @@ namespace StaffandTrain.Controllers
                     fullbody = str;
                 }
 
-                //string s = "<p> Dear " + fName[0] + ", </p>";
-
                 // Logic for font size for Name section in Email Body Starts here [SHIVAM]
-                string first_name = $"<p style=\"font-size: 14px\">{fName[0]},</p> <br/><br/>";
-                str = first_name + EmailBody;
+                var placeholders = new Dictionary<string, string>
+                {
+                    { "FirstName", fName[0] },
+                };
 
-                //if (fullbody != "")
-                //{
-                //    //Logic for adding name with email body by Shivam
-                //    int firstChar = fullbody.IndexOf('>');
-                //    int secondChar = fullbody.IndexOf('<', 2);
+                // Replace placeholders with values using regular expressions
+                str = Regex.Replace(EmailBody, @"\{\{(\w+)\}\}", match =>
+                {
+                    string placeholder = match.Groups[1].Value;
+                    if (placeholders.ContainsKey(placeholder))
+                    {
+                        return placeholders[placeholder];
+                    }
+                    else
+                    {
+                        return match.Value; // Keep original if no match
+                    }
+                });
 
-                //    if (firstChar == 2 && secondChar == 3)
-                //    {
-                //        int index = fullbody.IndexOf('>', 3);
-                //        fullbody = fullbody.Insert(index + 1, first_name);
-                //    }
-                //    else
-                //    {
-                //        fullbody = fullbody.Insert(3, first_name);
-                //    }
-
-                //    str = fullbody;
-                //}
-                //else
-                //{
-                //    //Logic for adding name with email body by Shivam
-                //    int firstChar = EmailBody.IndexOf('>');
-                //    int secondChar = EmailBody.IndexOf('<', 2);
-
-                //    if (firstChar == 2 && secondChar == 3)
-                //    {
-                //        int index = EmailBody.IndexOf('>', 2);
-                //        EmailBody = EmailBody.Insert(index + 1, first_name);
-                //    }
-                //    else
-                //    {
-                //        EmailBody = EmailBody.Insert(3, first_name);
-                //    }
-
-                //    str = EmailBody;
-                //}
                 // Logic for font size for Name section in Email Body Ends here [SHIVAM]
+                var css = @"
+                        <style>
+                            .email-preview {font-family:'Roboto', sans-serif !important; color: #2f2f2f !imporatnt;}
+                            .email-preview h1{font-size:24px;font-weight:normal;line-height:1.1;margin-bottom:10px !important; color: #070707 !important}
+                            .email-preview h2{font-size:22px;font-weight:normal;line-height:1.1;margin-bottom:10px !important; color: #070707 !important}
+                            .email-preview h3{font-size:20px;font-weight:normal;line-height:1.1;margin-bottom:10px !important; color: #070707 !important}
+                            .email-preview h4{font-size:18px;font-weight:normal;line-height:1.1;margin-bottom:10px !important; color: #070707 !important}
+                            .email-preview h5,
+                            .email-preview p{font-size:16px;margin-bottom:10px !important;font-weight: 400;}
+                            .email-preview h6{font-size:14px;margin-bottom:10px !important}
+                            .email-preview ol,
+                            .email-preview ul{font-size:16px;margin:10px 0;padding-left:20px !important}
+                            .email-preview b,
+                            .email-preview strong{font-weight:700 !important}
+                            .email-preview address,
+                            .email-preview em,
+                            .email-preview i{font-style:italic !important}
+                            .email-preview u{text-decoration:underline !important}
+                            .email-preview div{margin:10px 0;padding:10px;border:1px solid #ccc !important}
+                        </style>";
 
-                string mailBody = Server.HtmlDecode(str);
+                var htmlbody = $@"
+                    <html>
+                    <head>{css}</head>
+                    <body><div class=""email-preview"">{str}</div></body>
+                    </html>";
+
+                string mailBody = Server.HtmlDecode(htmlbody);
                 string Email = ContactEmail;
 
                 MailMessage message = new MailMessage();
