@@ -507,10 +507,11 @@ namespace StaffandTrain.Controllers
                 }
 
                 // Logic for font size for Name section in Email Body Starts here [SHIVAM]
-                var placeholders = new Dictionary<string, string>
+                var placeholders = new Dictionary<string, string>();
+                if (fName.Length > 0 && !string.IsNullOrEmpty(fName[0]))
                 {
-                    { "FirstName", fName[0] },
-                };
+                    placeholders.Add("FirstName", fName[0]);
+                }
 
                 // Replace placeholders with values using regular expressions
                 str = Regex.Replace(EmailBody, @"\{\{(\w+)\}\}", match =>
