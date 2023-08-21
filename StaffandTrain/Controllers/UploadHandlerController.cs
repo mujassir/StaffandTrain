@@ -35,7 +35,7 @@ namespace StaffandTrain.Controllers
                     {
                         uploaded = 1,
                         fileName = uniqueFileName,
-                        url = domainWithPort + fileUrl
+                        url = ConfigurationManager.AppSettings["ImageProxyUrl"] + uniqueFileName
                     });
                 }
                 else
