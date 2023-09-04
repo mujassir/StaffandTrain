@@ -218,14 +218,12 @@ function getcount() {
             dataType: 'json',
             data: { prospectListvalue: prospectListvalue, BizzTYpe: BizzTYpe, titleStandard: titleStandard },
             success: function (data) {
-                debugger;
-                //$("#divcnt").text("Total mail to be send " + data);
-				//$("#divcount").show();
-
 				// To bind dynamic values in batch dropdown
-                if (data > 0) {
+                if (data.Count > 0) {
                     //$('#BunchSelectingDropdownDiv').css('display', 'block');
-                    var EmailbatchCount = parseInt(data) / 500;
+                    const BatchLimit = data.BatchLimit
+                    const EmailCount = data.Count
+                    var EmailbatchCount = EmailCount / BatchLimit;
                     if ((EmailbatchCount - Math.floor(EmailbatchCount)) !== 0) {
                         EmailbatchCount = EmailbatchCount + 1;
                     }
@@ -236,17 +234,17 @@ function getcount() {
                     var count = 0;
                     for (var i = 1; i < EmailbatchCount; i++) {
                         var set_count = 0;
-                        if (i === 1 && parseInt(data) > 500) {
-                            count = parseInt(data) - 500;
-                            set_count = 500;
+                        if (i === 1 && parseInt(EmailCount) > BatchLimit) {
+                            count = parseInt(EmailCount) - BatchLimit;
+                            set_count = BatchLimit;
                         }
-                        else if (i === 1 && parseInt(data) < 500) {
-                            set_count = parseInt(data);
+                        else if (i === 1 && parseInt(EmailCount) < BatchLimit) {
+                            set_count = parseInt(EmailCount);
                         }
                         else {
-                            if (count > 500) {
-                                count = count - 500;
-                                set_count = 500;
+                            if (count > BatchLimit) {
+                                count = count - BatchLimit;
+                                set_count = BatchLimit;
                             }
                             else {
                                 set_count = count;
@@ -256,20 +254,20 @@ function getcount() {
                         $('#SelectBunchValue').append('<option data="' + set_count + '" name="' + i + '" value="' + 'Batch-' + i + '">' + 'Batch-' + i + '</option>');
                     }
 
-                    if (parseInt(data) > 500) {
-                        $('#HiddenBatchEmailCount').val("500");
-                        $("#divcnt").text("Total mail to be send: 500");
+                    if (parseInt(EmailCount) > BatchLimit) {
+                        $('#HiddenBatchEmailCount').val(BatchLimit);
+                        $("#divcnt").text("Total mail to be send: " + BatchLimit);
                         $("#divcount").show();
                     }
                     else {
-                        $('#HiddenBatchEmailCount').val(parseInt(data));
-                        $("#divcnt").text("Total mail to be send: " + parseInt(data));
+                        $('#HiddenBatchEmailCount').val(parseInt(EmailCount));
+                        $("#divcnt").text("Total mail to be send: " + parseInt(EmailCount));
                         $("#divcount").show();
                     }
                 }
                 else {
-                    $('#HiddenBatchEmailCount').val(parseInt(data));
-                    $("#divcnt").text("Total mail to be send: " + data);
+                    $('#HiddenBatchEmailCount').val(parseInt(EmailCount));
+                    $("#divcnt").text("Total mail to be send: " + EmailCount);
                     $("#divcount").show();
                 }
             },
