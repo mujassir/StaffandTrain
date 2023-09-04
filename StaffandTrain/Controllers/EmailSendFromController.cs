@@ -347,14 +347,14 @@ namespace StaffandTrain.Controllers
                     string lastBatchString = EmailBatchVal.Substring(EmailBatchVal.Length - 1);
                     int BatchNumber = Convert.ToInt32(lastBatchString);
                     int BatchEmailCountNumber = Convert.ToInt32(BatchEmailCount);
-
+                    var EmailBatchSize = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["EmailBatchSize"]);
                     for (int i = 0; i < BatchNumber; i++)
                     {
                         if (i == 0)
                         {
                             start_index = start_index + 0;
 
-                            if (BatchEmailCountNumber < 500)
+                            if (BatchEmailCountNumber < EmailBatchSize)
                             {
                                 if (BatchNumber - i == 1)
                                 {
@@ -362,12 +362,12 @@ namespace StaffandTrain.Controllers
                                 }
                                 else
                                 {
-                                    end_index = 500;
+                                    end_index = EmailBatchSize;
                                 }
                             }
                             else
                             {
-                                end_index = end_index + 500;
+                                end_index = end_index + EmailBatchSize;
                             }
                         }
                         else
@@ -380,7 +380,7 @@ namespace StaffandTrain.Controllers
                             else
                             {
                                 start_index = end_index;
-                                end_index = 500 * (i + 1);
+                                end_index = EmailBatchSize * (i + 1);
                             }
                         }
                     }
@@ -655,8 +655,12 @@ namespace StaffandTrain.Controllers
             {
                 intmailCount = context.SPgetcontactformailsend(prospectList, BizzTYpe, titleStandard).Count();
             }
-
-            return Json(intmailCount);
+            var EmailBatchSize = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["EmailBatchSize"]);
+            return Json(new
+            {
+                Count = intmailCount,
+                BatchLimit = EmailBatchSize
+            });
         }
 
         //    public void Sendmail()
