@@ -123,6 +123,11 @@ function prepareCompanyRow(element) {
                                     ${element.name}
                                 </a>
                             </td>
+                            <td>
+                                <a href="/ProspectViewList/Index?listid=${element.listid}&lstname=${element.listname}" target="_blank">
+                                    ${element.listname}
+                                </a>
+                            </td>
                             <td>${actions}</td>
                            </tr>`;
 
@@ -146,6 +151,12 @@ function prepareContactRow(element) {
                   <td>
                       ${element.combinednotes}
                   </td>
+
+                    <td>
+                        <a href="/ProspectViewList/Index?listid=${element.listid}&lstname=${element.listname}" target="_blank">
+                            ${element.listname}
+                        </a>
+                    </td>
                   <td>${actions}</td>
                </tr>`;
 

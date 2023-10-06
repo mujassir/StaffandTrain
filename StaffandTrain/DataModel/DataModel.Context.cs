@@ -2819,5 +2819,23 @@ namespace StaffandTrain.DataModel
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SPInsertOrUpdateLog", idParameter, statusParameter, typeParameter, descriptionParameter, recordIdParameter);
         }
+    
+        public virtual ObjectResult<SearchCompany_Result> SearchCompany(string searchQuery)
+        {
+            var searchQueryParameter = searchQuery != null ?
+                new ObjectParameter("SearchQuery", searchQuery) :
+                new ObjectParameter("SearchQuery", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchCompany_Result>("SearchCompany", searchQueryParameter);
+        }
+    
+        public virtual ObjectResult<SearchContact_Result> SearchContact(string searchQuery)
+        {
+            var searchQueryParameter = searchQuery != null ?
+                new ObjectParameter("SearchQuery", searchQuery) :
+                new ObjectParameter("SearchQuery", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchContact_Result>("SearchContact", searchQueryParameter);
+        }
     }
 }

@@ -25,10 +25,8 @@ namespace StaffandTrain.Controllers
             SATConn context = new SATConn();
             try
             {
-                var companySearchQuery = "EXEC DBO.SearchCompany @SearchQuery = '" + searchQuery + "'";
-                var contactSearchQuery = "EXEC DBO.SearchContact @SearchQuery = '" + searchQuery + "'";
-                var companies = context.Database.SqlQuery<Company>(companySearchQuery);
-                var contacts = context.Database.SqlQuery<Contact>(contactSearchQuery);
+                var companies = context.SearchCompany(searchQuery);
+                var contacts = context.SearchContact(searchQuery);
                 var result = new
                 {
                     success = true,

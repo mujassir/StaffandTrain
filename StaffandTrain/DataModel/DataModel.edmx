@@ -1486,6 +1486,12 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
         <Function Name="GetProspectingUserById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="listid" Type="int" Mode="In" />
         </Function>
+        <Function Name="SearchCompany" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchQuery" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SearchContact" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchQuery" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="SpaddContact" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="contactfullname" Type="nvarchar" Mode="In" />
           <Parameter Name="titlestandard" Type="nvarchar" Mode="In" />
@@ -3331,6 +3337,12 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
             <Parameter Name="RecordId" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="Configs" EntityType="Staffandtrain_NewModel.Config" />
+          <FunctionImport Name="SearchCompany" ReturnType="Collection(Staffandtrain_NewModel.SearchCompany_Result)">
+            <Parameter Name="SearchQuery" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SearchContact" ReturnType="Collection(Staffandtrain_NewModel.SearchContact_Result)">
+            <Parameter Name="SearchQuery" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="aspnet_Applications">
           <Key>
@@ -4872,6 +4884,52 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Property Name="Value" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="CreateAt" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <ComplexType Name="SearchCompany_Result">
+          <Property Type="Int32" Name="companyid" Nullable="false" />
+          <Property Type="Int32" Name="listid" Nullable="true" />
+          <Property Type="String" Name="citycircle" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="biztype" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="addr1" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="addr2" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="zip" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="weburl" Nullable="true" />
+          <Property Type="String" Name="phone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="adminnotes" Nullable="true" />
+          <Property Type="String" Name="notes" Nullable="true" />
+          <Property Type="String" Name="oldname" Nullable="true" MaxLength="50" />
+          <Property Type="Guid" Name="companyguid" Nullable="true" />
+          <Property Type="Guid" Name="listguid" Nullable="true" />
+          <Property Type="Boolean" Name="priority" Nullable="true" />
+          <Property Type="Boolean" Name="target" Nullable="true" />
+          <Property Type="String" Name="combinednotes" Nullable="true" />
+          <Property Type="String" Name="Userid" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="listname" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <ComplexType Name="SearchContact_Result">
+          <Property Type="Int32" Name="contactid" Nullable="false" />
+          <Property Type="Int32" Name="companyid" Nullable="true" />
+          <Property Type="String" Name="xcontactlname" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="titlestandard" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="contactphone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="contactcellphone" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="contactemail" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="linkedinprofileurl" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="adminnotes" Nullable="true" />
+          <Property Type="String" Name="contactnotes" Nullable="true" />
+          <Property Type="Guid" Name="contactguid" Nullable="true" />
+          <Property Type="Guid" Name="companyguid" Nullable="true" />
+          <Property Type="String" Name="contactfullname" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="xcontactfname" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="combinednotes" Nullable="true" />
+          <Property Type="String" Name="resumes" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="Userid" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="ResumeFilePath" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="listid" Nullable="false" />
+          <Property Type="String" Name="listname" Nullable="true" MaxLength="250" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6537,6 +6595,60 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SearchCompany" FunctionName="Staffandtrain_NewModel.Store.SearchCompany">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Staffandtrain_NewModel.SearchCompany_Result">
+                <ScalarProperty Name="companyid" ColumnName="companyid" />
+                <ScalarProperty Name="listid" ColumnName="listid" />
+                <ScalarProperty Name="citycircle" ColumnName="citycircle" />
+                <ScalarProperty Name="biztype" ColumnName="biztype" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="addr1" ColumnName="addr1" />
+                <ScalarProperty Name="addr2" ColumnName="addr2" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="zip" ColumnName="zip" />
+                <ScalarProperty Name="weburl" ColumnName="weburl" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="adminnotes" ColumnName="adminnotes" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="oldname" ColumnName="oldname" />
+                <ScalarProperty Name="companyguid" ColumnName="companyguid" />
+                <ScalarProperty Name="listguid" ColumnName="listguid" />
+                <ScalarProperty Name="priority" ColumnName="priority" />
+                <ScalarProperty Name="target" ColumnName="target" />
+                <ScalarProperty Name="combinednotes" ColumnName="combinednotes" />
+                <ScalarProperty Name="Userid" ColumnName="Userid" />
+                <ScalarProperty Name="listname" ColumnName="listname" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SearchContact" FunctionName="Staffandtrain_NewModel.Store.SearchContact">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Staffandtrain_NewModel.SearchContact_Result">
+                <ScalarProperty Name="contactid" ColumnName="contactid" />
+                <ScalarProperty Name="companyid" ColumnName="companyid" />
+                <ScalarProperty Name="xcontactlname" ColumnName="xcontactlname" />
+                <ScalarProperty Name="titlestandard" ColumnName="titlestandard" />
+                <ScalarProperty Name="contactphone" ColumnName="contactphone" />
+                <ScalarProperty Name="contactcellphone" ColumnName="contactcellphone" />
+                <ScalarProperty Name="contactemail" ColumnName="contactemail" />
+                <ScalarProperty Name="linkedinprofileurl" ColumnName="linkedinprofileurl" />
+                <ScalarProperty Name="adminnotes" ColumnName="adminnotes" />
+                <ScalarProperty Name="contactnotes" ColumnName="contactnotes" />
+                <ScalarProperty Name="contactguid" ColumnName="contactguid" />
+                <ScalarProperty Name="companyguid" ColumnName="companyguid" />
+                <ScalarProperty Name="contactfullname" ColumnName="contactfullname" />
+                <ScalarProperty Name="xcontactfname" ColumnName="xcontactfname" />
+                <ScalarProperty Name="combinednotes" ColumnName="combinednotes" />
+                <ScalarProperty Name="resumes" ColumnName="resumes" />
+                <ScalarProperty Name="Userid" ColumnName="Userid" />
+                <ScalarProperty Name="ResumeFilePath" ColumnName="ResumeFilePath" />
+                <ScalarProperty Name="listid" ColumnName="listid" />
+                <ScalarProperty Name="listname" ColumnName="listname" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
