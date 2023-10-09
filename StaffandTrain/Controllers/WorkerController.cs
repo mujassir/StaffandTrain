@@ -17,7 +17,7 @@ using System.Configuration;
 namespace StaffandTrain.Controllers
 {
     [NoCache]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Recruiter")]
     public class WorkerController : Controller
     {
         Common.Common cm = new Common.Common();
