@@ -72,7 +72,7 @@ namespace StaffandTrain.Controllers
                         Global.UserName = objlogin.Email;
                         FormsAuthentication.SetAuthCookie(objlogin.Email, true);
                         //#region Remember Me
-                         
+
                         //HttpCookie unm = new HttpCookie("unm", objlogin.Email);
                         //HttpCookie pas = new HttpCookie("pas", objlogin.Password);
                         //HttpCookie rem = new HttpCookie("rem", objlogin.RememberMe.ToString());
@@ -96,6 +96,7 @@ namespace StaffandTrain.Controllers
                         //#endregion
 
                         //FormsAuthentication.SetAuthCookie(objlogin.Email, false);
+                        UpdateLastLoginDate(CurrentUser.Email);
                         if (userrole =="Admin")
                         {
                             return RedirectToAction("Index", "AdminHome");
@@ -139,6 +140,14 @@ namespace StaffandTrain.Controllers
             Global.Role = "";
             Global.UserName = "";
             return RedirectToAction("Index","Home");
+        }
+
+        // Update last login date in the database
+        private void UpdateLastLoginDate(string email)
+        {
+            var user = context.aspnet_Membership.Where(x => x.Email == email).FirstOrDefault();
+            user.LastLoginDate = DateTime.Now;
+            context.SaveChanges();
         }
     }
 }
