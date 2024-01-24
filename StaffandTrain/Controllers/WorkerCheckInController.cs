@@ -16,6 +16,7 @@ namespace StaffandTrain.Controllers
         SATConn context = new SATConn();
         public ActionResult Index()
         {
+            return HttpNotFound();
             if (TempData["Message"] != null)
             {
                 ViewBag.message = TempData["Message"];
