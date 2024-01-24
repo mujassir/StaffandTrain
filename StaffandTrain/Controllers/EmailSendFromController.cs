@@ -556,7 +556,16 @@ namespace StaffandTrain.Controllers
                     </html>";
 
                 string mailBody = Server.HtmlDecode(htmlbody);
-                string Email = ContactEmail;
+                string Email = ContactEmail.Trim();
+
+                // Regular expression for basic email validation
+                string pattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$";
+                Regex regex = new Regex(pattern);
+
+                // Use the Regex.IsMatch method to check if the email is valid
+                var validEmail = regex.IsMatch(Email);
+                if (!validEmail) throw new Exception($"Invalid Email: {Email}");
+
 
                 MailMessage message = new MailMessage();
 
@@ -580,7 +589,7 @@ namespace StaffandTrain.Controllers
                     message.Priority = MailPriority.High;
 
 
-                    SmtpMail.Send(message); //Smtpclient to send the mail message  
+                    //SmtpMail.Send(message); //Smtpclient to send the mail message  
 
                     // One second of delay while email processing in loop (BY SHIVAM)
                     Thread.Sleep(5000);
@@ -593,7 +602,6 @@ namespace StaffandTrain.Controllers
             catch (Exception ex)
             {
                 SendErrorToText(ex, ContactEmail);
-                throw ex;
             }
 
             return returnvalue;

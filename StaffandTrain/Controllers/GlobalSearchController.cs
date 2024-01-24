@@ -25,8 +25,9 @@ namespace StaffandTrain.Controllers
             SATConn context = new SATConn();
             try
             {
-                var companies = context.SearchCompany(searchQuery);
-                var contacts = context.SearchContact(searchQuery);
+                var query = searchQuery.Trim();
+                var companies = context.SearchCompany(query);
+                var contacts = context.SearchContact(query);
                 var result = new
                 {
                     success = true,

@@ -350,10 +350,10 @@ function uploadImage(image) {
 }
 
 $("#SelectBunchValue").on("change", function () {
-    var lastDigit = this.value[this.value.length - 1];
+    var batchNumber = this.value.split("-")[1];
 
-    if (this.value.indexOf(lastDigit) !== -1) {
-        var row_id = parseInt(lastDigit) - 1;
+    if (batchNumber) {
+        var row_id = parseInt(batchNumber) - 1;
         var count = $($("#SelectBunchValue").children("option")[row_id]).attr("data");
 
         $('#HiddenBatchEmailCount').val(count);
