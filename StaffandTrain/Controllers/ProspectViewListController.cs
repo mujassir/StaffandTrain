@@ -54,7 +54,7 @@ namespace StaffandTrain.Controllers
 
 
 
-        public JsonResult GetCompanyList(int listid, string citycircle, string biztype, string title, string name, string Notes)
+        public JsonResult GetCompanyList(int listid, string citycircle, string biztype, string title, string name, string Notes, string email)
         {
             var prospectviewlist = new List<SpgetProspectViewList_Result>();
 
@@ -82,7 +82,7 @@ namespace StaffandTrain.Controllers
                         titlelist.Add(title);
                     }
                 }
-                if (listid != 0 && string.IsNullOrEmpty(citycircle) && string.IsNullOrEmpty(biztype) && string.IsNullOrEmpty(title) && string.IsNullOrEmpty(name) && string.IsNullOrEmpty(Notes))
+                if (listid != 0 && string.IsNullOrEmpty(citycircle) && string.IsNullOrEmpty(biztype) && string.IsNullOrEmpty(title) && string.IsNullOrEmpty(name) && string.IsNullOrEmpty(Notes) && string.IsNullOrEmpty(email))
                 {
                     var data = context.SpgetProspectViewList(listid).ToList();
                     prospectviewlist = data;
@@ -101,6 +101,7 @@ namespace StaffandTrain.Controllers
                                 ((title == null || title == "") || titlelist.Contains(x.titlestandard))
                                 &&
                                 ((name == null || name == "") || (x.contactfullname.Contains(name)) || (com.name.ToUpper().Contains(name.ToUpper()))) &&
+                                ((email == null || email == "") || (x.contactemail.ToLower().Contains(email.ToLower()))) &&
                                 ((Notes == null || Notes == "") || x.combinednotes.Trim().Replace("\r", "").Replace("\n", "").Replace(System.Environment.NewLine, "").Replace(" ", "").Contains(Notes))
                                 select new
                                 {

@@ -20,7 +20,8 @@ $(function () {
     var TitalValTxt = localStorage.titleVal;
     var NameValTxt = localStorage.nameVal;
     var NotsValTxt = localStorage.NotesVal;
-    if (BizTValTxt || CityCirValTxt || TitalValTxt || NameValTxt || NotsValTxt)
+    var EmailValTxt = localStorage.EmailVal;
+    if (BizTValTxt || CityCirValTxt || TitalValTxt || NameValTxt || NotsValTxt || EmailValTxt)
     {
         $('#ddlbiztype').val(localStorage.biztypeVal);
 
@@ -28,6 +29,7 @@ $(function () {
         $("#ddltitle").val(localStorage.titleVal);
         $("#txtname").val(localStorage.nameVal);
         $("#txtnotes").val(localStorage.NotesVal);
+        $("#txtemail").val(localStorage.emailVal);
 
         //var RetList = getUrlVars();
 
@@ -35,7 +37,7 @@ $(function () {
             type: "POST",
             url: "/ProspectViewList/GetCompanyList",
             async: false,
-            data: { listid: localStorage.ListIdVal, citycircle: localStorage.CitycircleVal, biztype: localStorage.biztypeVal, title: localStorage.titleVal, name: localStorage.nameVal, Notes: localStorage.NotesVal },
+            data: { listid: localStorage.ListIdVal, citycircle: localStorage.CitycircleVal, biztype: localStorage.biztypeVal, title: localStorage.titleVal, name: localStorage.nameVal, Notes: localStorage.NotesVal, email: localStorage.EmailVal },
             beforeSend: function () { showLoader(); },
 
 
@@ -177,6 +179,7 @@ function getcompanylist(listid) {
         var title = $("#ddltitle").val();
         var name = $("#txtname").val().trim();
         var Notes = $("#txtnotes").val().trim();
+        var Email = $("#txtemail").val().trim();
 
 
         localStorage.CitycircleVal = $("#ddlcitycircle").val();
@@ -184,12 +187,13 @@ function getcompanylist(listid) {
         localStorage.titleVal = $("#ddltitle").val();
         localStorage.nameVal = $("#txtname").val().trim();
         localStorage.NotesVal = $("#txtnotes").val().trim();
+        localStorage.emailVal = $("#txtemail").val().trim();
         localStorage.ListIdVal = listid;
         $.ajax({
             type: "POST",
             url: "/ProspectViewList/GetCompanyList",
             async: false,
-            data: { listid: listid, citycircle: citycircle, biztype: biztype, title: title, name: name, Notes: Notes },
+            data: { listid: listid, citycircle: citycircle, biztype: biztype, title: title, name: name, Notes: Notes, Email: Email },
             beforeSend: function () { showLoader(); },
 
 
