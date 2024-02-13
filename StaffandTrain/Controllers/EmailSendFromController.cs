@@ -588,8 +588,7 @@ namespace StaffandTrain.Controllers
                     message.BodyEncoding = Encoding.Default;
                     message.Priority = MailPriority.High;
 
-
-                    //SmtpMail.Send(message); //Smtpclient to send the mail message  
+                    SmtpMail.Send(message); //Smtpclient to send the mail message  
 
                     // One second of delay while email processing in loop (BY SHIVAM)
                     Thread.Sleep(5000);
