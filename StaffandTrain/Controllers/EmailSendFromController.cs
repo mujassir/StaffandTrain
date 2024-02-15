@@ -283,6 +283,7 @@ namespace StaffandTrain.Controllers
         public ActionResult Sendemail(EmailTemplate obj)
         {
             var errorExist = "";
+            var emailSendingError = "";
             try
             {
                 int prospectList = 0;
@@ -404,12 +405,19 @@ namespace StaffandTrain.Controllers
                             }
                             catch (Exception ex)
                             {
-                                errorExist = "Mail not sent: " + ex.InnerException.Message;
+                                var message = ex.InnerException.Message;
+                                if(message.StartsWith("Invalid Email:"))
+                                {
+                                    errorExist = "Mail not sent: " + message;
+                                } else
+                                {
+                                    emailSendingError = "Mail not sent: " + message;
+                                }
+                                
                                 break;
                             }
                         }
 
-                        TempData["Message"] = "Total Mail sent : " + intmailCount;
                     }
                     else
                     {
@@ -428,12 +436,18 @@ namespace StaffandTrain.Controllers
                             }
                             catch (Exception ex)
                             {
-                                errorExist = "Mail not sent: " + ex.InnerException.Message;
+                                var message = ex.InnerException?.Message ?? ex.Message;
+                                if (message.StartsWith("Invalid Email:"))
+                                {
+                                    errorExist = "Mail not sent: " + message;
+                                }
+                                else
+                                {
+                                    emailSendingError = "Mail not sent: " + message;
+                                }
                                 break;
                             }
                         }
-
-                        TempData["Message"] = "Total Mail sent : " + intmailCount;
                     }
                 }
                 else
@@ -442,7 +456,14 @@ namespace StaffandTrain.Controllers
                 }
                 // Logic ends here for Batch email processing [SHIVAM]
 
-                TempData["Message"] = "Total Mail sent : " + intmailCount;
+                if (string.IsNullOrEmpty(emailSendingError))
+                {
+                    TempData["Message"] = "Total Mail sent : " + intmailCount;
+                }
+                else
+                {
+                    TempData["Message"] = emailSendingError;
+                }
             }
             catch (Exception ex)
             {
@@ -569,7 +590,7 @@ namespace StaffandTrain.Controllers
 
                 MailMessage message = new MailMessage();
 
-                //message.To.Add("shivam.sh@cisinlabs.com");
+                //message.To.Add("info.usamaali@gmail.com");
                 message.To.Add(Email);
                 message.Subject = Subject;
                 message.From = new System.Net.Mail.MailAddress(senderemail);
@@ -601,6 +622,7 @@ namespace StaffandTrain.Controllers
             catch (Exception ex)
             {
                 SendErrorToText(ex, ContactEmail);
+                throw ex;
             }
 
             return returnvalue;
