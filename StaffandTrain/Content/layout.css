@@ -889,6 +889,10 @@ tr.con-recent td {
     background-color: lightblue !important;
 }
 
+.Str_lightblue {
+    background-color: #9ae1f9 !important;
+}
+
 .Str_yellow {
     background-color: #fce36f !important;
 }
@@ -900,11 +904,18 @@ tr.con-recent td {
 .Str_pink {
     background-color: lightpink !important;
 }
+.Str_cyan {
+    background-color: #9ac2db !important;
+}
 tr.Str_pink td {
        background-color: lightpink !important;
 }
 tr.Str_blue td {
        background-color: lightblue !important;
+}
+
+tr.Str_lightblue td {
+    background-color: #9ae1f9 !important;
 }
 
 tr.Str_yellow td {
@@ -913,6 +924,9 @@ tr.Str_yellow td {
 
 tr.Str_green td {
     background-color: lightgreen !important;
+}
+tr.Str_cyan td {
+    background-color: #9ac2db !important;
 }
 
 
