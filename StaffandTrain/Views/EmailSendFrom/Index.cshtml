@@ -99,7 +99,7 @@
         </h1>
         <div class="admin-form" style="max-width: 820px">
             <div class="admin-ctn admin-ctnemail">
-                @if (@ViewBag.message != null && @ViewBag.message == "Error" || (@ViewBag.message != null && @ViewBag.message.StartsWith("Mail not sent")))
+                @if (@ViewBag.message != null && @ViewBag.message.StartsWith("Error"))
                 {
                     <div id="" class="alert alert-danger">@ViewBag.Message</div>
                 }

@@ -889,6 +889,10 @@ tr.con-recent td {
     background-color: lightblue !important;
 }
 
+.Str_lightblue {
+    background-color: #9ae1f9 !important;
+}
+
 .Str_yellow {
     background-color: #fce36f !important;
 }
@@ -908,6 +912,10 @@ tr.Str_pink td {
 }
 tr.Str_blue td {
        background-color: lightblue !important;
+}
+
+tr.Str_lightblue td {
+    background-color: #9ae1f9 !important;
 }
 
 tr.Str_yellow td {

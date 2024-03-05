@@ -15,6 +15,8 @@ using StaffandTrain.Common;
 using System.Threading;
 using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml.Wordprocessing;
+using System.Data.Entity.Core.Objects;
+using StaffandTrain.Models;
 
 namespace StaffandTrain.Controllers
 {
@@ -280,10 +282,8 @@ namespace StaffandTrain.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Sendemail(EmailTemplate obj)
+        public ActionResult Sendemail(DataModel.EmailTemplate obj)
         {
-            var errorExist = "";
-            var emailSendingError = "";
             try
             {
                 int prospectList = 0;
@@ -342,137 +342,87 @@ namespace StaffandTrain.Controllers
 
                 int start_index = 0;
                 int end_index = 0;
-
-                if (!string.IsNullOrEmpty(EmailBatchVal) && !string.IsNullOrEmpty(BatchEmailCount))
+                
+                if (string.IsNullOrEmpty(EmailBatchVal))
                 {
-                    string lastBatchString = EmailBatchVal.Substring(EmailBatchVal.Length - 1);
-                    int BatchNumber = Convert.ToInt32(lastBatchString);
-                    int BatchEmailCountNumber = Convert.ToInt32(BatchEmailCount);
-                    var EmailBatchSize = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["EmailBatchSize"]);
-                    for (int i = 0; i < BatchNumber; i++)
-                    {
-                        if (i == 0)
-                        {
-                            start_index = start_index + 0;
+                    throw new ArgumentNullException(nameof(EmailBatchVal));
+                }
+                if(string.IsNullOrEmpty(BatchEmailCount))
+                {
+                    throw new ArgumentNullException(nameof(BatchEmailCount));
+                }
 
-                            if (BatchEmailCountNumber < EmailBatchSize)
+                string lastBatchString = EmailBatchVal.Substring(EmailBatchVal.Length - 1);
+                int BatchNumber = Convert.ToInt32(lastBatchString);
+                int BatchEmailCountNumber = Convert.ToInt32(BatchEmailCount);
+                var EmailBatchSize = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["EmailBatchSize"]);
+                for (int i = 0; i < BatchNumber; i++)
+                {
+                    if (i == 0)
+                    {
+                        start_index = start_index + 0;
+
+                        if (BatchEmailCountNumber < EmailBatchSize)
+                        {
+                            if (BatchNumber - i == 1)
                             {
-                                if (BatchNumber - i == 1)
-                                {
-                                    end_index = BatchEmailCountNumber;
-                                }
-                                else
-                                {
-                                    end_index = EmailBatchSize;
-                                }
+                                end_index = BatchEmailCountNumber;
                             }
                             else
                             {
-                                end_index = end_index + EmailBatchSize;
+                                end_index = EmailBatchSize;
                             }
                         }
                         else
                         {
-                            if (BatchNumber - i == 1)
-                            {
-                                start_index = end_index;
-                                end_index = start_index + BatchEmailCountNumber;
-                            }
-                            else
-                            {
-                                start_index = end_index;
-                                end_index = EmailBatchSize * (i + 1);
-                            }
+                            end_index = end_index + EmailBatchSize;
                         }
-                    }
-
-                    end_index = BatchEmailCountNumber;
-
-                    if (BizzTYpe == "")
-                    {
-                        var contact_details = context.SPGetDataForSendingEmailWithoutBizType(prospectList, titleStandard, start_index, end_index).ToList();
-
-                        foreach (var item in contact_details)
-                        {
-                            try
-                            {
-                                int value = sendemailcontact(item.contactfullname, item.contactemail, Request.Form["txtsubject"], templatedata.EmailBody, Request.Form["txtemail"], Request.Form["txtservername"], Request.Form["txtpassword"], Request.Form["txtportno"], enablessl, ImageName);
-
-                                if (value == 1)
-                                {
-                                    intmailCount++;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                var message = ex.InnerException.Message;
-                                if(message.StartsWith("Invalid Email:"))
-                                {
-                                    errorExist = "Mail not sent: " + message;
-                                } else
-                                {
-                                    emailSendingError = "Mail not sent: " + message;
-                                }
-                                
-                                break;
-                            }
-                        }
-
                     }
                     else
                     {
-                        var contact_details = context.SPGetDataForSendingEmailWithBizType(prospectList, titleStandard, BizzTYpe, start_index, end_index).ToList();
-                        
-                        foreach (var item in contact_details)
+                        if (BatchNumber - i == 1)
                         {
-                            try
-                            {
-                                int value = sendemailcontact(item.contactfullname, item.contactemail, Request.Form["txtsubject"], templatedata.EmailBody, Request.Form["txtemail"], Request.Form["txtservername"], Request.Form["txtpassword"], Request.Form["txtportno"], enablessl, ImageName);
-
-                                if (value == 1)
-                                {
-                                    intmailCount++;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                var message = ex.InnerException?.Message ?? ex.Message;
-                                if (message.StartsWith("Invalid Email:"))
-                                {
-                                    errorExist = "Mail not sent: " + message;
-                                }
-                                else
-                                {
-                                    emailSendingError = "Mail not sent: " + message;
-                                }
-                                break;
-                            }
+                            start_index = end_index;
+                            end_index = start_index + BatchEmailCountNumber;
                         }
+                        else
+                        {
+                            start_index = end_index;
+                            end_index = EmailBatchSize * (i + 1);
+                        }
+                    }
+                }
+
+                end_index = BatchEmailCountNumber;
+                    
+                if (BizzTYpe == "")
+                {
+                    var contact_details = context.SPGetDataForSendingEmailWithoutBizType(prospectList, titleStandard, start_index, end_index).ToList();
+                    for (int i = 0; i < contact_details.Count; i++)
+                    {
+                        var item = contact_details[i];
+                        int value = sendemailcontact(item.contactfullname, item.contactemail, Request.Form["txtsubject"], templatedata.EmailBody, Request.Form["txtemail"], Request.Form["txtservername"], Request.Form["txtpassword"], Request.Form["txtportno"], enablessl, ImageName);
+                        if (value == 1) intmailCount++;
                     }
                 }
                 else
                 {
-                    TempData["Message"] = "Error";
+                    var contact_details = context.SPGetDataForSendingEmailWithBizType(prospectList, titleStandard, BizzTYpe, start_index, end_index).ToList();
+                    for (int i = 0; i < contact_details.Count; i++)
+                    {
+                        var item = contact_details[i];
+                        int value = sendemailcontact(item.contactfullname, item.contactemail, Request.Form["txtsubject"], templatedata.EmailBody, Request.Form["txtemail"], Request.Form["txtservername"], Request.Form["txtpassword"], Request.Form["txtportno"], enablessl, ImageName);
+                        if (value == 1) intmailCount++;
+                    }
                 }
-                // Logic ends here for Batch email processing [SHIVAM]
 
-                if (string.IsNullOrEmpty(emailSendingError))
-                {
-                    TempData["Message"] = "Total Mail sent : " + intmailCount;
-                }
-                else
-                {
-                    TempData["Message"] = emailSendingError;
-                }
+                TempData["Message"] = "Total Mail sent : " + intmailCount;
             }
             catch (Exception ex)
             {
-                TempData["Message"] = "Error";
+                var message = "Error: " + (ex.InnerException?.Message ?? ex.Message);
+                TempData["Message"] = message;
                 cm.ErrorExceptionLogingByService(ex.ToString(), "EmailSendFrom" + ":" + new StackTrace().GetFrame(0).GetMethod().Name, "Sendemail", "NA", "NA", "NA", "WEB");
-            }
-            if(!string.IsNullOrEmpty(errorExist))
-            {
-                TempData["Message"] = errorExist;
             }
             return RedirectToAction("Index");
         }
@@ -485,7 +435,8 @@ namespace StaffandTrain.Controllers
             try
             {
                 string fullbody = "";
-                string[] fName = Name.Split(' ');
+                string[] fName = string.IsNullOrEmpty(Name) ? new string[] { "" } : Name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
                 string str = EmailBody;
                 string[] strArr = null;
                 string[] stringSeparators = new string[] { "<p>" };
@@ -622,7 +573,10 @@ namespace StaffandTrain.Controllers
             catch (Exception ex)
             {
                 SendErrorToText(ex, ContactEmail);
-                throw ex;
+                if(!ex.Message.StartsWith("Invalid Email"))
+                {
+                    throw ex;
+                }
             }
 
             return returnvalue;
