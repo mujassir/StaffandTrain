@@ -19,5 +19,6 @@ namespace StaffandTrain.DataModel
         public string Subject { get; set; }
         public string EmailBody { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<int> GroupingNumber { get; set; }
     }
 }
