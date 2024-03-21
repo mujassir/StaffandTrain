@@ -59,6 +59,11 @@
                         @Html.TextBoxFor(x => x.Subject, new { id = "txtSubject", @placeholder = "Subject", @class = "form-control", })
                         <div id="" class="validateTips"></div>
                     </div>
+                    <div class="col-sm-12 form-group">
+                        <label>Grouping Number</label>
+                        @Html.TextBoxFor(x => x.GroupingNumber, new { id = "txtGroupingNumber", @placeholder = "Grouping Number", @class = "form-control", })
+                        <div id="" class="validateTips"></div>
+                    </div>
                     <div class="col-sm-12 form-group form-group1 ">
                         <label>Template Body</label>
                         @Html.TextAreaFor(x => x.EmailBody, new { @class = "ckeditor", @id = "CKEditorContent" })

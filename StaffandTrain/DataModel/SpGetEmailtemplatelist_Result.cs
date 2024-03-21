@@ -17,5 +17,6 @@ namespace StaffandTrain.DataModel
         public string TemplateName { get; set; }
         public string Subject { get; set; }
         public string EmailBody { get; set; }
+        public Nullable<int> GroupingNumber { get; set; }
     }
 }

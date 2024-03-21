@@ -2007,7 +2007,7 @@ namespace StaffandTrain.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SPinsertCompanyClient", citycircleParameter, biztypeParameter, nameParameter, addr1Parameter, addr2Parameter, cityParameter, stateParameter, zipParameter, weburlParameter, phoneParameter, priorityParameter, targetParameter, combinednotesParameter, adminnotesParameter, notesParameter, listidParameter, useridParameter);
         }
     
-        public virtual int SpInsertEmailTemplate(string templateName, string subject, string emailBody)
+        public virtual int SpInsertEmailTemplate(string templateName, string subject, Nullable<int> groupingNumber, string emailBody)
         {
             var templateNameParameter = templateName != null ?
                 new ObjectParameter("TemplateName", templateName) :
@@ -2017,11 +2017,15 @@ namespace StaffandTrain.DataModel
                 new ObjectParameter("Subject", subject) :
                 new ObjectParameter("Subject", typeof(string));
     
+            var groupingNumberParameter = groupingNumber.HasValue ?
+                new ObjectParameter("GroupingNumber", groupingNumber) :
+                new ObjectParameter("GroupingNumber", typeof(int));
+    
             var emailBodyParameter = emailBody != null ?
                 new ObjectParameter("EmailBody", emailBody) :
                 new ObjectParameter("EmailBody", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SpInsertEmailTemplate", templateNameParameter, subjectParameter, emailBodyParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SpInsertEmailTemplate", templateNameParameter, subjectParameter, groupingNumberParameter, emailBodyParameter);
         }
     
         public virtual int SPInsertProspectlist(string listname, Nullable<byte> restricted, string userid)
@@ -2252,7 +2256,7 @@ namespace StaffandTrain.DataModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spupdatecontactresumes", resumesParameter, contactidParameter);
         }
     
-        public virtual int SpUpdateEmailTemplate(string templateName, string subject, string emailBody, Nullable<int> templateId)
+        public virtual int SpUpdateEmailTemplate(string templateName, string subject, Nullable<int> groupingNumber, string emailBody, Nullable<int> templateId)
         {
             var templateNameParameter = templateName != null ?
                 new ObjectParameter("TemplateName", templateName) :
@@ -2262,6 +2266,10 @@ namespace StaffandTrain.DataModel
                 new ObjectParameter("Subject", subject) :
                 new ObjectParameter("Subject", typeof(string));
     
+            var groupingNumberParameter = groupingNumber.HasValue ?
+                new ObjectParameter("GroupingNumber", groupingNumber) :
+                new ObjectParameter("GroupingNumber", typeof(int));
+    
             var emailBodyParameter = emailBody != null ?
                 new ObjectParameter("EmailBody", emailBody) :
                 new ObjectParameter("EmailBody", typeof(string));
@@ -2270,7 +2278,7 @@ namespace StaffandTrain.DataModel
                 new ObjectParameter("TemplateId", templateId) :
                 new ObjectParameter("TemplateId", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SpUpdateEmailTemplate", templateNameParameter, subjectParameter, emailBodyParameter, templateIdParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SpUpdateEmailTemplate", templateNameParameter, subjectParameter, groupingNumberParameter, emailBodyParameter, templateIdParameter);
         }
     
         public virtual int Spupdatejob(string jobtitle, string jobdescr, string submittals, Nullable<int> jobid, Nullable<int> rowNumber)
@@ -2836,6 +2844,20 @@ namespace StaffandTrain.DataModel
                 new ObjectParameter("SearchQuery", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SearchContact_Result>("SearchContact", searchQueryParameter);
+        }
+    
+        public virtual ObjectResult<SpGetEmailtemplatelist_Result> SPgetemailtemplat_GroupinngAdded()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SpGetEmailtemplatelist_Result>("SPgetemailtemplat_GroupinngAdded");
+        }
+    
+        public virtual ObjectResult<SPgetemailtemplatebytemplateid_Result> SPgetemailtemplatebytemplateid_GroupingAdded(Nullable<int> templateId)
+        {
+            var templateIdParameter = templateId.HasValue ?
+                new ObjectParameter("TemplateId", templateId) :
+                new ObjectParameter("TemplateId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SPgetemailtemplatebytemplateid_Result>("SPgetemailtemplatebytemplateid_GroupingAdded", templateIdParameter);
         }
     }
 }

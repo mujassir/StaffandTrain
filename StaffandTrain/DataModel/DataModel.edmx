@@ -265,9 +265,8 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.Config' does not 
           <Property Name="Subject" Type="varchar" MaxLength="500" />
           <Property Name="EmailBody" Type="nvarchar(max)" />
           <Property Name="CreateDate" Type="datetime" />
+          <Property Name="GroupingNumber" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.ErrorLog' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ErrorLog">
           <Key>
             <PropertyRef Name="LogID" />
@@ -328,8 +327,6 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.locations' does n
           <Property Name="locid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="locname" Type="nvarchar" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.Logs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Logs">
           <Key>
             <PropertyRef Name="Id" />
@@ -339,9 +336,9 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.Logs' does not ha
             <PropertyRef Name="CreateAt" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Status" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" Nullable="false" />
           <Property Name="RecordId" Type="int" />
           <Property Name="CreateAt" Type="datetime" Nullable="false" />
         </EntityType>
@@ -1736,13 +1733,14 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
         <Function Name="SpInsertEmailTemplate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="TemplateName" Type="varchar" Mode="In" />
           <Parameter Name="Subject" Type="varchar" Mode="In" />
+          <Parameter Name="GroupingNumber" Type="int" Mode="In" />
           <Parameter Name="EmailBody" Type="varchar(max)" Mode="In" />
         </Function>
         <Function Name="SPInsertOrUpdateLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Id" Type="int" Mode="In" />
-          <Parameter Name="Status" Type="nvarchar" Mode="In" />
-          <Parameter Name="Type" Type="nvarchar" Mode="In" />
-          <Parameter Name="Description" Type="nvarchar" Mode="In" />
+          <Parameter Name="Status" Type="varchar" Mode="In" />
+          <Parameter Name="Type" Type="varchar" Mode="In" />
+          <Parameter Name="Description" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="RecordId" Type="int" Mode="In" />
         </Function>
         <Function Name="SPInsertOrUpdateWorker" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1827,6 +1825,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
         <Function Name="SpUpdateEmailTemplate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="TemplateName" Type="varchar" Mode="In" />
           <Parameter Name="Subject" Type="varchar" Mode="In" />
+          <Parameter Name="GroupingNumber" Type="int" Mode="In" />
           <Parameter Name="EmailBody" Type="varchar(max)" Mode="In" />
           <Parameter Name="TemplateId" Type="int" Mode="In" />
         </Function>
@@ -1880,6 +1879,8 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <EntitySet Name="Companies_ListDeleted" EntityType="Self.Companies_ListDeleted" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contacts" EntityType="Self.Contacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmailTemplate" EntityType="Self.EmailTemplate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ErrorLog" EntityType="Self.ErrorLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Logs" EntityType="Self.Logs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OpenJobs" EntityType="Self.OpenJobs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Prospecting_Lists" EntityType="Self.Prospecting_Lists" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Subscribers" EntityType="Self.Subscribers" Schema="dbo" store:Type="Tables" />
@@ -1898,16 +1899,6 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
     [Config].[Value] AS [Value], 
     [Config].[CreateAt] AS [CreateAt]
     FROM [dbo].[Config] AS [Config]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="ErrorLog" EntityType="Self.ErrorLog" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [ErrorLog].[LogID] AS [LogID], 
-    [ErrorLog].[Error] AS [Error], 
-    [ErrorLog].[FunctionInformation] AS [FunctionInformation], 
-    [ErrorLog].[ClientID] AS [ClientID], 
-    [ErrorLog].[Url] AS [Url], 
-    [ErrorLog].[Date] AS [Date]
-    FROM [dbo].[ErrorLog] AS [ErrorLog]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ExpirationKeys" EntityType="Self.ExpirationKeys" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -1944,16 +1935,6 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
     [locations].[locid] AS [locid], 
     [locations].[locname] AS [locname]
     FROM [dbo].[locations] AS [locations]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Logs" EntityType="Self.Logs" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Logs].[Id] AS [Id], 
-    [Logs].[Status] AS [Status], 
-    [Logs].[Type] AS [Type], 
-    [Logs].[Description] AS [Description], 
-    [Logs].[RecordId] AS [RecordId], 
-    [Logs].[CreateAt] AS [CreateAt]
-    FROM [dbo].[Logs] AS [Logs]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Newsletters" EntityType="Self.Newsletters" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -3070,6 +3051,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <FunctionImport Name="SpInsertEmailTemplate">
             <Parameter Name="TemplateName" Mode="In" Type="String" />
             <Parameter Name="Subject" Mode="In" Type="String" />
+            <Parameter Name="GroupingNumber" Mode="In" Type="Int32" />
             <Parameter Name="EmailBody" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SPInsertProspectlist">
@@ -3138,6 +3120,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <FunctionImport Name="SpUpdateEmailTemplate">
             <Parameter Name="TemplateName" Mode="In" Type="String" />
             <Parameter Name="Subject" Mode="In" Type="String" />
+            <Parameter Name="GroupingNumber" Mode="In" Type="Int32" />
             <Parameter Name="EmailBody" Mode="In" Type="String" />
             <Parameter Name="TemplateId" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -3338,10 +3321,14 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           </FunctionImport>
           <EntitySet Name="Configs" EntityType="Staffandtrain_NewModel.Config" />
           <FunctionImport Name="SearchCompany" ReturnType="Collection(Staffandtrain_NewModel.SearchCompany_Result)">
-            <Parameter Name="SearchQuery" Mode="In" Type="String" />
+          <Parameter Name="SearchQuery" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SearchContact" ReturnType="Collection(Staffandtrain_NewModel.SearchContact_Result)">
-            <Parameter Name="SearchQuery" Mode="In" Type="String" />
+          <Parameter Name="SearchQuery" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SPgetemailtemplat_GroupinngAdded" ReturnType="Collection(Staffandtrain_NewModel.SpGetEmailtemplatelist_Result)" />
+          <FunctionImport Name="SPgetemailtemplatebytemplateid_GroupingAdded" ReturnType="Collection(Staffandtrain_NewModel.SPgetemailtemplatebytemplateid_Result)">
+            <Parameter Name="TemplateId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="aspnet_Applications">
@@ -3600,6 +3587,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Property Name="Subject" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="EmailBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="GroupingNumber" Type="Int32" />
         </EntityType>
         <EntityType Name="Prospecting_Lists">
           <Key>
@@ -4608,12 +4596,14 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <Property Type="String" Name="Subject" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="EmailBody" Nullable="true" />
           <Property Type="DateTime" Name="CreateDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="GroupingNumber" Nullable="true" />
         </ComplexType>
         <ComplexType Name="SpGetEmailtemplatelist_Result">
           <Property Type="Int32" Name="TemplateId" Nullable="false" />
           <Property Type="String" Name="TemplateName" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="Subject" Nullable="true" MaxLength="500" />
           <Property Type="String" Name="EmailBody" Nullable="true" />
+          <Property Type="Int32" Name="GroupingNumber" Nullable="true" />
         </ComplexType>
         <ComplexType Name="spgetjobdetailbyjobid_Result">
           <Property Type="Int32" Name="jobid" Nullable="false" />
@@ -4864,11 +4854,11 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
             <PropertyRef Name="Status" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="RecordId" Type="Int32" />
           <Property Name="CreateAt" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Config">
           <Key>
@@ -5182,6 +5172,7 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
           <EntitySetMapping Name="EmailTemplates">
             <EntityTypeMapping TypeName="Staffandtrain_NewModel.EmailTemplate">
               <MappingFragment StoreEntitySet="EmailTemplate">
+                <ScalarProperty Name="GroupingNumber" ColumnName="GroupingNumber" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="EmailBody" ColumnName="EmailBody" />
                 <ScalarProperty Name="Subject" ColumnName="Subject" />
@@ -6646,6 +6637,29 @@ warning 6002: The table/view 'SQL2017_1013691_customerlist.dbo.vw_aspnet_WebPart
                 <ScalarProperty Name="ResumeFilePath" ColumnName="ResumeFilePath" />
                 <ScalarProperty Name="listid" ColumnName="listid" />
                 <ScalarProperty Name="listname" ColumnName="listname" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPgetemailtemplat_GroupinngAdded" FunctionName="Staffandtrain_NewModel.Store.SpGetEmailtemplatelist">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Staffandtrain_NewModel.SpGetEmailtemplatelist_Result">
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="EmailBody" ColumnName="EmailBody" />
+                <ScalarProperty Name="GroupingNumber" ColumnName="GroupingNumber" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SPgetemailtemplatebytemplateid_GroupingAdded" FunctionName="Staffandtrain_NewModel.Store.SPgetemailtemplatebytemplateid">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Staffandtrain_NewModel.SPgetemailtemplatebytemplateid_Result">
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="TemplateName" ColumnName="TemplateName" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="EmailBody" ColumnName="EmailBody" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="GroupingNumber" ColumnName="GroupingNumber" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -59,6 +59,7 @@ namespace StaffandTrain.Controllers
                         //objemail.EmailBody = cm.StripHTML(emailtempdata.EmailBody.Replace("&nbsp;", "").Replace("nbsp;", ""));
                         objemail.EmailBody = (emailtempdata.EmailBody.Replace("&nbsp;", " ").Replace("nbsp;", " "));
                         objemail.Subject = emailtempdata.Subject;
+                        objemail.GroupingNumber = emailtempdata.GroupingNumber;
                     }
                 }
             }
@@ -96,13 +97,13 @@ namespace StaffandTrain.Controllers
             {
                 if (objemail.TemplateIdDecrypt == 0)
                 {
-                    context.SpInsertEmailTemplate(objemail.TemplateName, objemail.Subject, objemail.EmailBody);
+                    context.SpInsertEmailTemplate(objemail.TemplateName, objemail.Subject, objemail.GroupingNumber, objemail.EmailBody);
                     context.SaveChanges();
                     TempData["Message"] = "Record Saved";
                 }
                 else
                 {
-                    context.SpUpdateEmailTemplate(objemail.TemplateName, objemail.Subject, objemail.EmailBody, objemail.TemplateIdDecrypt);
+                    context.SpUpdateEmailTemplate(objemail.TemplateName, objemail.Subject, objemail.GroupingNumber, objemail.EmailBody, objemail.TemplateIdDecrypt);
                     context.SaveChanges();
                     TempData["Message"] = "Record Updated";
                 }

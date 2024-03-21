@@ -17,6 +17,9 @@ using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Data.Entity.Core.Objects;
 using StaffandTrain.Models;
+using DocumentFormat.OpenXml.Presentation;
+using DocumentFormat.OpenXml.EMMA;
+using System.Web.Optimization;
 
 namespace StaffandTrain.Controllers
 {
@@ -44,7 +47,22 @@ namespace StaffandTrain.Controllers
             {
                 ViewData["CityCircle"] = context.SpgetProspectingselectlist().Select(xx => new SelectListItem { Value = xx.listid.ToString(), Text = xx.listname }).ToList();
                 ViewData["Titlelist"] = context.SPgettitle().Select(xx => new SelectListItem { Value = xx.ToString(), Text = xx.ToString() }).ToList();
-                ViewData["Templatelist"] = context.SpGetEmailtemplatelist().Select(xx => new SelectListItem { Value = xx.TemplateId.ToString(), Text = xx.TemplateName.ToString() }).ToList();
+                var templateList = context.SpGetEmailtemplatelist().GroupBy(e => e.GroupingNumber);
+                var templateListData = new List<SelectListItem>();
+                foreach (var group in templateList)
+                {
+                    var optionGroup = new SelectListGroup() { Name = $"Group {group.Key}" };
+                    foreach (var item in group)
+                    {
+                        templateListData.Add(new SelectListItem()
+                        {
+                            Value = item.TemplateId.ToString(),
+                            Text = item.TemplateName.ToString(),
+                            Group = group.Key != null ? optionGroup : null,
+                        });
+                    }
+                }
+                ViewData["Templatelist"] = templateListData;
 
                 if (TempData["Message"] != null)
                 {
